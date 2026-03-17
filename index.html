@@ -5,23 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Scanner">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-title" content="PFM Scanner">
+<meta name="theme-color" content="#0C111D">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Badge Scanner</title>
+<title>PFM Badge Scanner</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
 
   :root {
-    --green: #00ff87;
-    --yellow: #ffdd00;
-    --red: #ff4d4d;
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --border: #2a2a2a;
-    --text: #f0f0f0;
-    --muted: #666;
+    --red: #F04438;
+    --red-dark: #D92D20;
+    --red-light: #FDA29B;
+    --purple: #9E77ED;
+    --bg: #0C111D;
+    --bg-2: #161B2C;
+    --bg-3: #1E2536;
+    --border: #2A3347;
+    --text: #FFFFFF;
+    --muted: #667085;
+    --muted-light: #98A2B3;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -29,13 +32,14 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
     height: 100dvh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
 
+  /* ── CONFIG ──────────────────────────────────────────── */
   #config {
     position: fixed;
     inset: 0;
@@ -43,45 +47,108 @@
     z-index: 100;
     display: flex;
     flex-direction: column;
-    padding: 48px 24px 32px;
-    gap: 20px;
+    padding: 0;
     overflow-y: auto;
   }
 
-  #config h1 {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--green);
-    letter-spacing: 0.15em;
+  .config-header {
+    padding: 48px 24px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2);
+  }
+
+  .config-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .config-logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--red);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .config-logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .config-logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
-  #config h2 { font-size: 22px; font-weight: 600; line-height: 1.2; }
+  .config-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+  }
 
-  .field { display: flex; flex-direction: column; gap: 8px; }
+  .config-header p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--muted-light);
+    line-height: 1.5;
+  }
+
+  .config-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--red);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
 
   .field label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted-light);
+    letter-spacing: 0.02em;
   }
 
   .field input {
-    background: var(--surface);
+    background: var(--bg-2);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 14px 16px;
+    padding: 12px 14px;
     color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 14px;
     outline: none;
     width: 100%;
     transition: border-color 0.2s;
   }
 
-  .field input:focus { border-color: var(--green); }
+  .field input:focus { border-color: var(--red); }
+  .field input::placeholder { color: var(--muted); }
 
   .field-row {
     display: grid;
@@ -89,54 +156,57 @@
     gap: 10px;
   }
 
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--green);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding-top: 4px;
-    border-top: 1px solid var(--border);
-  }
-
   #config-save {
-    margin-top: 8px;
-    background: var(--green);
-    color: #000;
+    background: var(--red);
+    color: #fff;
     border: none;
-    border-radius: 12px;
-    padding: 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     width: 100%;
+    transition: background 0.2s;
+    margin-top: 4px;
   }
 
+  #config-save:active { background: var(--red-dark); }
+
+  .tagline {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.05em;
+    padding-bottom: 8px;
+  }
+
+  /* ── INSTALL BANNER ──────────────────────────────────── */
   #install-banner {
     position: fixed;
-    bottom: 24px;
-    left: 16px; right: 16px;
-    background: var(--surface);
-    border: 1px solid var(--green);
-    border-radius: 14px;
+    bottom: 24px; left: 16px; right: 16px;
+    background: var(--bg-2);
+    border: 1px solid var(--red);
+    border-radius: 12px;
     padding: 16px 20px;
     display: none;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     z-index: 200;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 32px rgba(240,68,56,0.15);
   }
 
   #install-banner.show { display: flex; }
   #install-banner p { font-size: 13px; color: var(--text); line-height: 1.4; flex: 1; }
-  #install-banner p span { display: block; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
-  #install-btn { background: var(--green); color: #000; border: none; border-radius: 8px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  #install-banner p span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  #install-btn { background: var(--red); color: #fff; border: none; border-radius: 6px; padding: 10px 16px; font-family: 'Instrument Sans', Helvetica, sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   #install-dismiss { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 0 4px; }
 
+  /* ── MAIN APP ────────────────────────────────────────── */
   #app { display: none; flex-direction: column; height: 100dvh; position: relative; }
 
+  /* ── HEADER ─────────────────────────────────────────── */
   #header {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -144,66 +214,117 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 20px 0;
+    padding: 16px 16px 0;
+  }
+
+  #header-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(12,17,29,0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px 6px 8px;
+  }
+
+  .header-logo-mark {
+    width: 22px; height: 22px;
+    background: var(--red);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .header-logo-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  #header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   #counter {
-    background: rgba(0,0,0,0.6);
+    background: rgba(12,17,29,0.75);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 6px 14px;
-    font-family: 'DM Mono', monospace;
+    padding: 6px 12px;
     font-size: 12px;
-    color: var(--green);
+    font-weight: 500;
+    color: var(--red-light);
   }
 
   #settings-btn {
-    background: rgba(0,0,0,0.6);
+    background: rgba(12,17,29,0.75);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 20px;
-    width: 36px; height: 36px;
+    width: 34px; height: 34px;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--muted); font-size: 16px;
+    cursor: pointer; color: var(--muted); font-size: 15px;
   }
 
+  /* ── DAY TOGGLE ─────────────────────────────────────── */
   #day-toggle {
     position: absolute;
-    top: 68px; left: 50%;
+    top: 64px; left: 50%;
     transform: translateX(-50%);
     z-index: 10;
-    background: rgba(0,0,0,0.6);
+    background: rgba(12,17,29,0.8);
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     border-radius: 24px;
-    padding: 4px;
+    padding: 3px;
     display: flex;
     gap: 2px;
   }
 
   .day-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 6px 16px;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 18px;
     border-radius: 20px;
     border: none;
     background: transparent;
-    color: var(--muted);
+    color: var(--muted-light);
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
   }
 
-  .day-btn.active { background: var(--green); color: #000; font-weight: 600; }
+  .day-btn.active {
+    background: var(--red);
+    color: #fff;
+    font-weight: 600;
+  }
 
+  /* ── VIEWFINDER ──────────────────────────────────────── */
   #viewfinder { flex: 1; position: relative; overflow: hidden; background: #000; }
   #video { width: 100%; height: 100%; object-fit: cover; display: block; }
   #canvas { display: none; }
   #motion-canvas { display: none; }
 
+  /* Subtle vignette overlay */
+  #viewfinder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(12,17,29,0.5) 100%);
+    pointer-events: none;
+  }
+
+  /* ── SCAN FRAME ─────────────────────────────────────── */
   .scan-frame {
     position: absolute;
     top: 50%; left: 50%;
@@ -212,22 +333,32 @@
     max-width: 320px;
     aspect-ratio: 16/9;
     pointer-events: none;
+    z-index: 2;
   }
 
   .scan-frame::before, .scan-frame::after,
   .scan-frame span::before, .scan-frame span::after {
     content: ''; position: absolute;
-    width: 20px; height: 20px;
+    width: 22px; height: 22px;
     border-style: solid;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   .scan-frame.idle::before, .scan-frame.idle::after,
-  .scan-frame.idle span::before, .scan-frame.idle span::after { border-color: rgba(255,255,255,0.3); }
+  .scan-frame.idle span::before, .scan-frame.idle span::after {
+    border-color: rgba(255,255,255,0.25);
+  }
+
   .scan-frame.detecting::before, .scan-frame.detecting::after,
-  .scan-frame.detecting span::before, .scan-frame.detecting span::after { border-color: var(--yellow); }
+  .scan-frame.detecting span::before, .scan-frame.detecting span::after {
+    border-color: #F79009;
+  }
+
   .scan-frame.locked::before, .scan-frame.locked::after,
-  .scan-frame.locked span::before, .scan-frame.locked span::after { border-color: var(--green); }
+  .scan-frame.locked span::before, .scan-frame.locked span::after {
+    border-color: var(--red);
+    box-shadow: 0 0 8px rgba(240,68,56,0.6);
+  }
 
   .scan-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
   .scan-frame::after { top: 0; right: 0; border-width: 2px 2px 0 0; }
@@ -236,95 +367,178 @@
 
   .scan-line {
     position: absolute; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
     opacity: 0; transition: opacity 0.3s;
   }
 
-  .scan-frame.locked .scan-line { opacity: 0.8; animation: scan 1s ease-in-out infinite; }
+  .scan-frame.locked .scan-line { opacity: 1; animation: scan 1s ease-in-out infinite; }
   @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
+  /* ── CONTROLS ───────────────────────────────────────── */
   #controls {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    padding: 24px 24px 40px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 20px 24px 36px;
+    background: linear-gradient(transparent, rgba(12,17,29,0.92));
     display: flex; flex-direction: column; align-items: center; gap: 12px;
+    z-index: 2;
   }
 
   #status-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.4); transition: color 0.3s; height: 16px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    transition: color 0.3s;
+    height: 16px;
   }
 
-  #status-text.detecting { color: var(--yellow); }
-  #status-text.locked { color: var(--green); }
+  #status-text.detecting { color: #F79009; }
+  #status-text.locked { color: var(--red-light); }
 
   #stability-bar-wrap {
-    width: 120px; height: 3px;
-    background: rgba(255,255,255,0.1);
+    width: 100px; height: 2px;
+    background: rgba(255,255,255,0.08);
     border-radius: 2px; overflow: hidden;
     opacity: 0; transition: opacity 0.3s;
   }
 
   #stability-bar-wrap.show { opacity: 1; }
-  #stability-bar { height: 100%; width: 0%; background: var(--green); border-radius: 2px; transition: width 0.1s linear; }
+
+  #stability-bar {
+    height: 100%; width: 0%;
+    background: var(--red);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+  }
 
   #scan-btn {
-    width: 64px; height: 64px; border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; color: white;
-    font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.05em;
+    width: 66px; height: 66px;
+    border-radius: 50%;
+    background: rgba(240,68,56,0.12);
+    border: 1.5px solid rgba(240,68,56,0.3);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
   }
 
   #scan-btn:active { transform: scale(0.93); }
-  #scan-btn.active { background: var(--green); border-color: var(--green); box-shadow: 0 0 32px rgba(0,255,135,0.4); color: #000; }
+  #scan-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 0 28px rgba(240,68,56,0.45);
+    color: #fff;
+  }
 
+  /* ── RESULT OVERLAY ─────────────────────────────────── */
   #result-overlay {
     position: absolute; inset: 0;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(4px);
+    background: rgba(12,17,29,0.9);
+    backdrop-filter: blur(6px);
     display: none; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 32px; gap: 24px; z-index: 20;
+    padding: 32px; gap: 20px; z-index: 20;
   }
 
   #result-overlay.show { display: flex; }
 
   .result-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 16px; padding: 24px; width: 100%; max-width: 360px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%; max-width: 360px;
   }
 
-  .result-card.success { border-color: var(--green); }
-  .result-card.error { border-color: var(--red); }
+  .result-card.success { border-color: var(--red); }
+  .result-card.error { border-color: #475467; }
+
+  .result-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
 
   .result-status {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  .success .result-status { color: var(--green); }
-  .error .result-status { color: var(--red); }
+  .success .result-status { color: var(--red-light); }
+  .error .result-status { color: var(--muted-light); }
 
-  .result-name { font-size: 22px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
-  .result-company { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); }
-  .result-message { font-size: 15px; color: var(--muted); line-height: 1.5; }
+  .result-day-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(240,68,56,0.12);
+    color: var(--red-light);
+    border: 1px solid rgba(240,68,56,0.25);
+    border-radius: 12px;
+    padding: 3px 10px;
+  }
+
+  .result-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 16px;
+  }
+
+  .result-name {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .result-company {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-light);
+  }
+
+  .result-message { font-size: 14px; color: var(--muted-light); line-height: 1.5; }
 
   #reset-btn {
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 10px; padding: 14px 32px;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 32px;
+    color: var(--muted-light);
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
   }
 
+  #reset-btn:active { border-color: var(--red); color: var(--text); }
+
+  /* ── SAVING INDICATOR ───────────────────────────────── */
   #saving-indicator {
-    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,0.8); border: 1px solid var(--border);
-    border-radius: 20px; padding: 6px 16px;
-    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
-    opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 30;
+    position: absolute; top: 20px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12,17,29,0.9);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted-light);
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; white-space: nowrap; z-index: 30;
+    letter-spacing: 0.04em;
   }
 
   #saving-indicator.show { opacity: 1; }
@@ -332,57 +546,78 @@
 </head>
 <body>
 
+<!-- CONFIG -->
 <div id="config">
-  <h1>Setup</h1>
-  <h2>Badge Scanner<br>Configuration</h2>
-
-  <div class="field">
-    <label>Gemini API Key</label>
-    <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
+  <div class="config-header">
+    <div class="config-logo">
+      <div class="config-logo-mark">P</div>
+      <div>
+        <div class="config-logo-text">PFM Intelligence</div>
+        <div class="config-logo-sub">Badge Scanner</div>
+      </div>
+    </div>
+    <h2>Scanner Setup</h2>
+    <p>Configure your API credentials and event day sheets to get started.</p>
   </div>
 
-  <div class="field">
-    <label>n8n Webhook URL</label>
-    <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
-  </div>
+  <div class="config-body">
+    <div class="field">
+      <label>Gemini API Key</label>
+      <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
+    </div>
 
-  <div class="section-label">Day 1</div>
-  <div class="field-row">
     <div class="field">
-      <label>Display Name</label>
-      <input type="text" id="label-day1" placeholder="e.g. Day 1" autocomplete="off">
+      <label>n8n Webhook URL</label>
+      <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
     </div>
-    <div class="field">
-      <label>Sheet ID</label>
-      <input type="text" id="sheet-day1" placeholder="{00000000-...}" autocomplete="off">
-    </div>
-  </div>
 
-  <div class="section-label">Day 2</div>
-  <div class="field-row">
-    <div class="field">
-      <label>Display Name</label>
-      <input type="text" id="label-day2" placeholder="e.g. Day 2" autocomplete="off">
+    <div class="section-label">Day 1</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Display Name</label>
+        <input type="text" id="label-day1" placeholder="e.g. Day 1" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Sheet ID</label>
+        <input type="text" id="sheet-day1" placeholder="{00000000-...}" autocomplete="off">
+      </div>
     </div>
-    <div class="field">
-      <label>Sheet ID</label>
-      <input type="text" id="sheet-day2" placeholder="{562517FD-...}" autocomplete="off">
-    </div>
-  </div>
 
-  <button id="config-save">Start Scanning</button>
+    <div class="section-label">Day 2</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Display Name</label>
+        <input type="text" id="label-day2" placeholder="e.g. Day 2" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Sheet ID</label>
+        <input type="text" id="sheet-day2" placeholder="{562517FD-...}" autocomplete="off">
+      </div>
+    </div>
+
+    <button id="config-save">Start Scanning</button>
+    <div class="tagline">Unlocking location potential</div>
+  </div>
 </div>
 
+<!-- INSTALL BANNER -->
 <div id="install-banner">
-  <p>Install Badge Scanner <span>Add to home screen for offline access</span></p>
+  <p>Install PFM Scanner <span>Add to home screen for offline access</span></p>
   <button id="install-btn">Install</button>
   <button id="install-dismiss">✕</button>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div id="header">
-    <div id="counter">0 scanned</div>
-    <div id="settings-btn">⚙</div>
+    <div id="header-logo">
+      <div class="header-logo-mark">P</div>
+      <div class="header-logo-name">PFM Scanner</div>
+    </div>
+    <div id="header-right">
+      <div id="counter">0 scanned</div>
+      <div id="settings-btn">⚙</div>
+    </div>
   </div>
 
   <div id="day-toggle">
@@ -405,7 +640,11 @@
 
   <div id="result-overlay">
     <div class="result-card" id="result-card">
-      <div class="result-status" id="result-status"></div>
+      <div class="result-top">
+        <div class="result-status" id="result-status"></div>
+        <div class="result-day-badge" id="result-day-badge"></div>
+      </div>
+      <div class="result-divider"></div>
       <div class="result-name" id="result-name"></div>
       <div class="result-company" id="result-company"></div>
       <div class="result-message" id="result-message"></div>
@@ -446,12 +685,9 @@ document.getElementById('config-save').addEventListener('click', () => {
   const lbl2   = document.getElementById('label-day2').value.trim();
   const sheet2 = document.getElementById('sheet-day2').value.trim();
   if (!key || !url || !lbl1 || !sheet1 || !lbl2 || !sheet2) { alert('All fields are required.'); return; }
-  LS.set('gemini_key', key);
-  LS.set('webhook_url', url);
-  LS.set('label_day1', lbl1);
-  LS.set('sheet_day1', sheet1);
-  LS.set('label_day2', lbl2);
-  LS.set('sheet_day2', sheet2);
+  LS.set('gemini_key', key); LS.set('webhook_url', url);
+  LS.set('label_day1', lbl1); LS.set('sheet_day1', sheet1);
+  LS.set('label_day2', lbl2); LS.set('sheet_day2', sheet2);
   showApp();
 });
 
@@ -520,8 +756,7 @@ async function startCamera() {
     video.srcObject = stream;
     video.onplaying = () => {
       scanBtn.disabled = false;
-      motionCanvas.width = 160;
-      motionCanvas.height = 90;
+      motionCanvas.width = 160; motionCanvas.height = 90;
       startMotionDetection();
     };
   } catch(e) {
@@ -535,11 +770,10 @@ const statusText = document.getElementById('status-text');
 const stabilityBarWrap = document.getElementById('stability-bar-wrap');
 const stabilityBar = document.getElementById('stability-bar');
 
-// Higher thresholds = less false triggering
 const MOTION_THRESHOLD = 18;
 const STABLE_FRAMES_NEEDED = 16;
-const CONTRAST_THRESHOLD = 45;   // raised — tables/floors typically <35
-const EDGE_THRESHOLD = 12;        // requires actual edges (text/lines), not just colour variation
+const CONTRAST_THRESHOLD = 45;
+const EDGE_THRESHOLD = 12;
 const MOTION_CHECK_INTERVAL = 60;
 
 let prevImageData = null;
@@ -554,19 +788,15 @@ function getFrameStats() {
   const pixels = current.data;
   const w = 160, h = 90;
 
-  // Contrast (stdDev of brightness)
   let sum = 0, sumSq = 0, count = 0;
   const brightness = new Float32Array(w * h);
   for (let i = 0; i < pixels.length; i += 4) {
     const b = (pixels[i] + pixels[i+1] + pixels[i+2]) / 3;
-    brightness[count] = b;
-    sum += b; sumSq += b * b; count++;
+    brightness[count] = b; sum += b; sumSq += b * b; count++;
   }
   const mean = sum / count;
   const stdDev = Math.sqrt((sumSq / count) - (mean * mean));
 
-  // Edge density — counts pixels with large brightness diff from neighbour
-  // This filters out uniform surfaces (tables, walls) even if colourful
   let edges = 0;
   for (let y = 1; y < h - 1; y++) {
     for (let x = 1; x < w - 1; x++) {
@@ -578,24 +808,17 @@ function getFrameStats() {
   }
   const edgeDensity = edges / (w * h) * 100;
 
-  // Motion diff from previous frame
   let motion = 0;
   if (prevImageData) {
-    for (let i = 0; i < pixels.length; i += 4) {
-      motion += Math.abs(pixels[i] - prevImageData.data[i]);
-    }
+    for (let i = 0; i < pixels.length; i += 4) motion += Math.abs(pixels[i] - prevImageData.data[i]);
     motion /= count;
-  } else {
-    motion = 999;
-  }
+  } else { motion = 999; }
 
   prevImageData = current;
   return { stdDev, edgeDensity, motion };
 }
 
 function looksLikeBadge(stdDev, edgeDensity) {
-  // Must have BOTH high contrast AND meaningful edges
-  // A plain table might have stdDev >35 if mixed colours but low edge density
   return stdDev > CONTRAST_THRESHOLD && edgeDensity > EDGE_THRESHOLD;
 }
 
@@ -682,20 +905,14 @@ function saveToExcel(parsed) {
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      first_name: parsed.first_name,
-      last_name: parsed.last_name,
-      company: parsed.company,
-      sheet: getActiveSheet()
-    })
+    body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company, sheet: getActiveSheet() })
   }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
 }
 
 // ── SCAN ─────────────────────────────────────────────────────
 async function triggerScan() {
   if (isScanning) return;
-  isScanning = true;
-  stableFrames = 0;
+  isScanning = true; stableFrames = 0;
   try {
     const image = captureFrame();
     if (!image || image.length < 1000) { showError('Capture failed. Try again.'); return; }
@@ -708,10 +925,7 @@ async function triggerScan() {
   }
 }
 
-scanBtn.addEventListener('click', () => {
-  if (isScanning || scanBtn.disabled) return;
-  triggerScan();
-});
+scanBtn.addEventListener('click', () => { if (isScanning || scanBtn.disabled) return; triggerScan(); });
 
 // ── RESULT UI ────────────────────────────────────────────────
 const overlay = document.getElementById('result-overlay');
@@ -719,7 +933,8 @@ const card = document.getElementById('result-card');
 
 function showSuccess(data) {
   card.className = 'result-card success';
-  document.getElementById('result-status').textContent = `✓ Saved · ${getActiveLabel()}`;
+  document.getElementById('result-status').textContent = '✓ Captured';
+  document.getElementById('result-day-badge').textContent = getActiveLabel();
   document.getElementById('result-name').textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || '—';
   document.getElementById('result-company').textContent = data.company || '—';
   document.getElementById('result-message').textContent = '';
@@ -730,6 +945,7 @@ function showSuccess(data) {
 function showError(msg) {
   card.className = 'result-card error';
   document.getElementById('result-status').textContent = '✕ Scan failed';
+  document.getElementById('result-day-badge').textContent = '';
   document.getElementById('result-name').textContent = '';
   document.getElementById('result-company').textContent = '';
   document.getElementById('result-message').textContent = msg;
@@ -739,8 +955,7 @@ function showError(msg) {
 document.getElementById('reset-btn').addEventListener('click', () => {
   overlay.classList.remove('show');
   setFrameState('idle', 'Point camera at badge', 0);
-  isScanning = false;
-  prevImageData = null;
+  isScanning = false; prevImageData = null;
 });
 
 // ── INIT ─────────────────────────────────────────────────────
