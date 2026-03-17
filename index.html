@@ -1,453 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Badge Scanner</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Badge Scanner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600&display=swap');
 
-    :root {
-      --bg: #0a0a0a;
-      --surface: #141414;
-      --border: #222;
-      --green: #00ff87;
-      --red: #ff3b3b;
-      --text: #f0f0f0;
-      --muted: #555;
-    }
+  :root {
+    --green: #00ff87;
+    --yellow: #ffdd00;
+    --red: #ff4d4d;
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --muted: #666;
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      height: 100dvh;
-      overflow: hidden;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
 
-    #viewfinder {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
+  /* CONFIG PANEL */
+  #config {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 24px 32px;
+    gap: 24px;
+  }
 
-    #overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      pointer-events: none;
-    }
+  #config h1 {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
 
-    #topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 20px 0;
-      pointer-events: all;
-    }
+  #config h2 { font-size: 22px; font-weight: 600; line-height: 1.2; }
 
-    #counter {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text);
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-    }
+  .field { display: flex; flex-direction: column; gap: 8px; }
 
-    #settings-btn {
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 16px;
-      transition: border-color 0.2s;
-    }
-    #settings-btn:hover { border-color: var(--green); }
+  .field label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 
-    #frame-guide {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
-      width: min(320px, 80vw);
-      height: min(200px, 50vw);
-      pointer-events: none;
-    }
-    #frame-guide::before,
-    #frame-guide::after,
-    #frame-guide .corner-br,
-    #frame-guide .corner-bl {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border-color: var(--green);
-      border-style: solid;
-    }
-    #frame-guide::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
-    #frame-guide::after  { top: 0; right: 0; border-width: 2px 2px 0 0; }
-    #frame-guide .corner-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-    #frame-guide .corner-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .field input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
 
-    #scan-line {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-      animation: scan 1.8s linear infinite;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    #scan-line.active { opacity: 1; }
-    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+  .field input:focus { border-color: var(--green); }
 
-    #bottom {
-      padding: 0 24px 52px;
-      pointer-events: all;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-    }
+  #config-save {
+    margin-top: auto;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
 
-    #hint {
-      font-size: 11px;
-      color: rgba(255,255,255,0.45);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-family: 'Space Mono', monospace;
-    }
+  /* MAIN APP */
+  #app {
+    display: none;
+    flex-direction: column;
+    height: 100dvh;
+    position: relative;
+  }
 
-    #scan-btn {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 2px solid var(--green);
-      background: rgba(0,255,135,0.08);
-      backdrop-filter: blur(8px);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
-    }
-    #scan-btn::before {
-      content: '';
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--green);
-      transition: transform 0.15s ease, opacity 0.15s ease;
-    }
-    #scan-btn:active::before { transform: scale(0.88); }
-    #scan-btn.loading::before { animation: pulse 0.8s ease infinite; }
-    #scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(0.85); opacity: 0.5; }
-    }
+  /* HEADER */
+  #header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 0;
+  }
 
-    /* ── CARDS ── */
-    .sheet {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .sheet.show { opacity: 1; pointer-events: all; }
-    .sheet-inner {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 400px;
-      transform: translateY(20px);
-      transition: transform 0.25s ease;
-    }
-    .sheet.show .sheet-inner { transform: translateY(0); }
+  #counter {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+  }
 
-    .sheet-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
-    .dot.err { background: var(--red); }
+  #settings-btn {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 16px;
+  }
 
-    #result-name    { font-size: 26px; font-weight: 600; line-height: 1.1; margin-bottom: 6px; }
-    #result-company { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
-    #error-msg      { font-size: 15px; color: var(--red); margin-bottom: 24px; display: none; }
+  /* VIEWFINDER */
+  #viewfinder {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
 
-    .btn-ghost {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-ghost:hover { border-color: var(--green); background: rgba(0,255,135,0.05); }
+  #video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 
-    .field-label  { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
-    .field-input  {
-      width: 100%; padding: 12px 14px;
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text);
-      font-family: 'Space Mono', monospace; font-size: 11px;
-      margin-bottom: 16px; outline: none; transition: border-color 0.2s;
-    }
-    .field-input:focus { border-color: var(--green); }
+  #canvas { display: none; }
+  #motion-canvas { display: none; }
 
-    .row { display: flex; gap: 10px; margin-top: 8px; }
-    .btn-primary {
-      flex: 1; padding: 13px; border-radius: 10px; border: none;
-      background: var(--green); color: #000;
-      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px;
-      cursor: pointer; transition: opacity 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-    .btn-secondary {
-      flex: 1; padding: 13px; border-radius: 10px;
-      border: 1px solid var(--border); background: transparent; color: var(--text);
-      font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer;
-    }
-    .btn-danger {
-      width: 100%; padding: 11px; border-radius: 10px;
-      border: 1px solid #2a2a2a; background: transparent; color: var(--muted);
-      font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
-      margin-top: 8px; transition: color 0.2s, border-color 0.2s;
-    }
-    .btn-danger:hover { color: var(--red); border-color: var(--red); }
+  /* SCAN FRAME — color changes with state */
+  .scan-frame {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 75vw;
+    max-width: 320px;
+    aspect-ratio: 16/9;
+    pointer-events: none;
+    transition: --frame-color 0.3s;
+  }
 
-    #no-camera {
-      display: none; position: fixed; inset: 0; z-index: 30;
-      background: var(--bg); align-items: center; justify-content: center;
-      text-align: center; padding: 40px; flex-direction: column; gap: 16px;
-    }
-    #no-camera.show { display: flex; }
-    #no-camera strong { font-size: 18px; }
-    #no-camera p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  .scan-frame::before, .scan-frame::after,
+  .scan-frame span::before, .scan-frame span::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-style: solid;
+    transition: border-color 0.3s;
+  }
 
-    canvas { display: none; }
-  </style>
+  .scan-frame.idle::before, .scan-frame.idle::after,
+  .scan-frame.idle span::before, .scan-frame.idle span::after { border-color: rgba(255,255,255,0.3); }
+
+  .scan-frame.detecting::before, .scan-frame.detecting::after,
+  .scan-frame.detecting span::before, .scan-frame.detecting span::after { border-color: var(--yellow); }
+
+  .scan-frame.locked::before, .scan-frame.locked::after,
+  .scan-frame.locked span::before, .scan-frame.locked span::after { border-color: var(--green); }
+
+  .scan-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+  .scan-frame::after { top: 0; right: 0; border-width: 2px 2px 0 0; }
+  .scan-frame span::before { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+  .scan-frame span::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+  /* SCAN LINE — only shows when locked */
+  .scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .scan-frame.locked .scan-line {
+    opacity: 0.8;
+    animation: scan 1s ease-in-out infinite;
+  }
+
+  @keyframes scan {
+    0% { top: 0; } 100% { top: 100%; }
+  }
+
+  /* BOTTOM CONTROLS */
+  #controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 24px 24px 40px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #status-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    transition: color 0.3s;
+    height: 16px;
+  }
+
+  #status-text.detecting { color: var(--yellow); }
+  #status-text.locked { color: var(--green); }
+  #status-text.scanning { color: var(--green); }
+
+  /* STABILITY BAR */
+  #stability-bar-wrap {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  #stability-bar-wrap.show { opacity: 1; }
+
+  #stability-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width 0.1s linear, background 0.3s;
+  }
+
+  /* MANUAL SCAN BUTTON */
+  #scan-btn {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: white;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  #scan-btn:active { transform: scale(0.93); }
+  #scan-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    box-shadow: 0 0 32px rgba(0,255,135,0.4);
+    color: #000;
+  }
+
+  /* RESULT OVERLAY */
+  #result-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    gap: 24px;
+    z-index: 20;
+  }
+
+  #result-overlay.show { display: flex; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .result-card.success { border-color: var(--green); }
+  .result-card.error { border-color: var(--red); }
+
+  .result-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .success .result-status { color: var(--green); }
+  .error .result-status { color: var(--red); }
+
+  .result-name { font-size: 22px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
+  .result-company { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); }
+  .result-message { font-size: 15px; color: var(--muted); line-height: 1.5; }
+
+  #reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 32px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  /* SAVING INDICATOR */
+  #saving-indicator {
+    position: absolute;
+    top: 72px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 30;
+  }
+
+  #saving-indicator.show { opacity: 1; }
+</style>
 </head>
 <body>
 
-<canvas id="canvas"></canvas>
-<video id="viewfinder" autoplay playsinline muted></video>
-
-<div id="overlay">
-  <div id="topbar">
-    <div id="counter">0 scanned today</div>
-    <div id="settings-btn" onclick="openSettings()">⚙</div>
+<!-- CONFIG -->
+<div id="config">
+  <h1>Setup</h1>
+  <h2>Badge Scanner<br>Configuration</h2>
+  <div class="field">
+    <label>Gemini API Key</label>
+    <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
   </div>
-  <div id="frame-guide">
-    <div class="corner-br"></div>
-    <div class="corner-bl"></div>
-    <div id="scan-line"></div>
+  <div class="field">
+    <label>n8n Webhook URL</label>
+    <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
   </div>
-  <div id="bottom">
-    <div id="hint">Point at badge · tap to scan</div>
-    <button id="scan-btn" onclick="scan()" disabled></button>
-  </div>
+  <button id="config-save">Start Scanning</button>
 </div>
 
-<!-- Result -->
-<div id="result-card" class="sheet" onclick="if(event.target===this)closeResult()">
-  <div class="sheet-inner">
-    <div class="sheet-label"><span class="dot" id="status-dot"></span><span id="status-label">Saved</span></div>
-    <div id="result-name"></div>
-    <div id="result-company"></div>
-    <div id="error-msg"></div>
-    <button class="btn-ghost" onclick="closeResult()">Scan next badge</button>
+<!-- APP -->
+<div id="app">
+  <div id="header">
+    <div id="counter">0 scanned</div>
+    <div id="settings-btn">⚙</div>
   </div>
-</div>
 
-<!-- Settings -->
-<div id="settings-drawer" class="sheet" onclick="if(event.target===this)closeSettings()">
-  <div class="sheet-inner">
-    <div class="sheet-label">Settings</div>
-    <label class="field-label">Gemini API Key</label>
-    <input class="field-input" id="input-gemini" type="password" placeholder="AIza..." />
-    <label class="field-label">n8n Webhook URL</label>
-    <input class="field-input" id="input-webhook" type="text" placeholder="https://n8n.your-domain.com/webhook/badge-scan" />
-    <div class="row">
-      <button class="btn-primary" onclick="saveSettings()">Save</button>
-      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+  <div id="viewfinder">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <canvas id="motion-canvas"></canvas>
+    <div class="scan-frame idle" id="scan-frame">
+      <span></span>
+      <div class="scan-line"></div>
     </div>
-    <button class="btn-danger" onclick="clearCount()">Clear today's count</button>
   </div>
-</div>
 
-<div id="no-camera">
-  <strong>Camera access required</strong>
-  <p>Please allow camera access in your browser settings and refresh the page.</p>
+  <div id="controls">
+    <div id="status-text">Point camera at badge</div>
+    <div id="stability-bar-wrap"><div id="stability-bar"></div></div>
+    <button id="scan-btn" disabled>TAP</button>
+  </div>
+
+  <div id="result-overlay">
+    <div class="result-card" id="result-card">
+      <div class="result-status" id="result-status"></div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-company" id="result-company"></div>
+      <div class="result-message" id="result-message"></div>
+    </div>
+    <button id="reset-btn">Scan Another</button>
+  </div>
+
+  <div id="saving-indicator">Saving to Excel...</div>
 </div>
 
 <script>
-  const GEMINI_KEY_STORE = 'bs_gemini_key';
-  const WEBHOOK_STORE    = 'bs_webhook_url';
-  const COUNT_STORE      = 'bs_count_' + new Date().toDateString();
+// ── CONFIG ──────────────────────────────────────────────────
+const LS = { get: k => localStorage.getItem(k)||'', set: (k,v) => localStorage.setItem(k,v) };
 
-  const getGeminiKey = () => localStorage.getItem(GEMINI_KEY_STORE) || '';
-  const getWebhook   = () => localStorage.getItem(WEBHOOK_STORE) || '';
-  const getCount     = () => parseInt(localStorage.getItem(COUNT_STORE) || '0');
-  const incCount     = () => { localStorage.setItem(COUNT_STORE, getCount() + 1); updateCounter(); };
-  const updateCounter = () => { document.getElementById('counter').textContent = getCount() + ' scanned today'; };
+const configEl = document.getElementById('config');
+const appEl = document.getElementById('app');
 
-  updateCounter();
+document.getElementById('config-save').addEventListener('click', () => {
+  const key = document.getElementById('gemini-key').value.trim();
+  const url = document.getElementById('webhook-url').value.trim();
+  if (!key || !url) { alert('Both fields are required.'); return; }
+  LS.set('gemini_key', key);
+  LS.set('webhook_url', url);
+  showApp();
+});
 
-  const video  = document.getElementById('viewfinder');
-  const canvas = document.getElementById('canvas');
-  const btn    = document.getElementById('scan-btn');
+document.getElementById('settings-btn').addEventListener('click', () => {
+  stopMotionDetection();
+  document.getElementById('gemini-key').value = LS.get('gemini_key');
+  document.getElementById('webhook-url').value = LS.get('webhook_url');
+  configEl.style.display = 'flex';
+  appEl.style.display = 'none';
+});
 
-  async function startCamera() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-      });
-      video.srcObject = stream;
-      video.onplaying = () => { btn.disabled = false; };
-    } catch (e) {
-      document.getElementById('no-camera').classList.add('show');
-    }
-  }
+function showApp() {
+  configEl.style.display = 'none';
+  appEl.style.display = 'flex';
   startCamera();
+}
 
-  async function scan() {
-    const geminiKey = getGeminiKey();
-    const webhook   = getWebhook();
-    if (!geminiKey || !webhook) { openSettings(); return; }
+// ── COUNTER ─────────────────────────────────────────────────
+const counterEl = document.getElementById('counter');
+let count = parseInt(LS.get('scan_count')||'0');
+function updateCounter() { counterEl.textContent = `${count} scanned`; }
+function incrementCounter() { count++; LS.set('scan_count', count); updateCounter(); }
+updateCounter();
 
-    // Capture frame
-    const W = 800;
-    canvas.width  = W;
-    canvas.height = Math.round(W * video.videoHeight / video.videoWidth);
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    const base64 = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+// ── CAMERA ──────────────────────────────────────────────────
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const motionCanvas = document.getElementById('motion-canvas');
+const scanBtn = document.getElementById('scan-btn');
 
-    if (!base64 || base64.length < 1000) { showError('Capture failed. Try again.'); return; }
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+    video.srcObject = stream;
+    video.onplaying = () => {
+      scanBtn.disabled = false;
+      motionCanvas.width = 160;
+      motionCanvas.height = 90;
+      startMotionDetection();
+    };
+  } catch(e) {
+    alert('Camera access required. Please allow camera access and refresh.');
+  }
+}
 
-    btn.disabled = true;
-    btn.classList.add('loading');
-    document.getElementById('scan-line').classList.add('active');
+// ── MOTION DETECTION ─────────────────────────────────────────
+const frame = document.getElementById('scan-frame');
+const statusText = document.getElementById('status-text');
+const stabilityBarWrap = document.getElementById('stability-bar-wrap');
+const stabilityBar = document.getElementById('stability-bar');
 
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${geminiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [
-              { inline_data: { mime_type: 'image/jpeg', data: base64 } },
-              { text: 'Return JSON only, no markdown: {"first_name":"","last_name":"","company":""}. Extract from badge. Null if missing.' }
-            ]}],
-            generationConfig: { thinkingConfig: { thinkingBudget: 0 } }
-          })
-        }
-      );
+const MOTION_THRESHOLD = 25;     // pixel diff to count as motion
+const STABLE_FRAMES_NEEDED = 12; // frames stable before auto-scan (~0.8s at 15fps)
+const MOTION_CHECK_INTERVAL = 55; // ms between checks
 
-      const data = await res.json();
-      const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      let parsed;
-      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
-      catch { throw new Error('Could not read badge. Try again.'); }
+let prevImageData = null;
+let stableFrames = 0;
+let motionInterval = null;
+let isScanning = false;
+let hasContent = false;
 
-      const name    = [parsed.first_name, parsed.last_name].filter(Boolean).join(' ') || 'Unknown';
-      const company = parsed.company || '';
+function getMotionScore() {
+  const ctx = motionCanvas.getContext('2d');
+  ctx.drawImage(video, 0, 0, 160, 90);
+  const current = ctx.getImageData(0, 0, 160, 90);
 
-      // Fire-and-forget to n8n
-      fetch(webhook, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company })
-      }).catch(() => {});
+  if (!prevImageData) {
+    prevImageData = current;
+    return 999;
+  }
 
-      incCount();
-      showResult(name, company);
+  let diff = 0;
+  const len = current.data.length;
+  for (let i = 0; i < len; i += 4) {
+    diff += Math.abs(current.data[i] - prevImageData.data[i]);
+  }
+  prevImageData = current;
+  return diff / (160 * 90);
+}
 
-    } catch (err) {
-      showError(err.message || 'Something went wrong.');
-    } finally {
-      btn.disabled = false;
-      btn.classList.remove('loading');
-      document.getElementById('scan-line').classList.remove('active');
+function getBrightness() {
+  const ctx = motionCanvas.getContext('2d');
+  const data = ctx.getImageData(0, 0, 160, 90).data;
+  let total = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    total += (data[i] + data[i+1] + data[i+2]) / 3;
+  }
+  return total / (160 * 90);
+}
+
+function startMotionDetection() {
+  motionInterval = setInterval(() => {
+    if (isScanning) return;
+
+    const motion = getMotionScore();
+    const brightness = getBrightness();
+    hasContent = brightness > 20 && brightness < 240;
+
+    if (!hasContent) {
+      setFrameState('idle', 'Point camera at badge', 0);
+      stableFrames = 0;
+      return;
     }
-  }
 
-  function showResult(name, company) {
-    document.getElementById('status-dot').className = 'dot';
-    document.getElementById('status-label').textContent = 'Saved ✓';
-    document.getElementById('result-name').textContent = name;
-    document.getElementById('result-company').textContent = company;
-    document.getElementById('error-msg').style.display = 'none';
-    document.getElementById('result-card').classList.add('show');
-    setTimeout(closeResult, 3000);
-  }
+    if (motion > MOTION_THRESHOLD) {
+      // Moving
+      stableFrames = Math.max(0, stableFrames - 2);
+      setFrameState('detecting', 'Hold steady...', stableFrames / STABLE_FRAMES_NEEDED * 100);
+    } else {
+      // Stable
+      stableFrames = Math.min(STABLE_FRAMES_NEEDED, stableFrames + 1);
+      const progress = stableFrames / STABLE_FRAMES_NEEDED * 100;
+      
+      if (stableFrames >= STABLE_FRAMES_NEEDED) {
+        setFrameState('locked', 'Scanning...', 100);
+        triggerScan();
+      } else {
+        setFrameState('detecting', 'Hold steady...', progress);
+      }
+    }
+  }, MOTION_CHECK_INTERVAL);
+}
 
-  function showError(msg) {
-    document.getElementById('status-dot').className = 'dot err';
-    document.getElementById('status-label').textContent = 'Error';
-    document.getElementById('result-name').textContent = '';
-    document.getElementById('result-company').textContent = '';
-    const el = document.getElementById('error-msg');
-    el.style.display = 'block';
-    el.textContent = msg;
-    document.getElementById('result-card').classList.add('show');
-  }
+function stopMotionDetection() {
+  if (motionInterval) { clearInterval(motionInterval); motionInterval = null; }
+}
 
-  function closeResult()  { document.getElementById('result-card').classList.remove('show'); }
-  function openSettings() {
-    document.getElementById('input-gemini').value = getGeminiKey();
-    document.getElementById('input-webhook').value = getWebhook();
-    document.getElementById('settings-drawer').classList.add('show');
+function setFrameState(state, text, progress) {
+  frame.className = `scan-frame ${state}`;
+  statusText.className = state;
+  statusText.textContent = text;
+  stabilityBar.style.width = `${progress}%`;
+  
+  if (state === 'idle') {
+    stabilityBarWrap.classList.remove('show');
+    scanBtn.classList.remove('active');
+  } else {
+    stabilityBarWrap.classList.add('show');
+    if (state === 'locked') scanBtn.classList.add('active');
+    else scanBtn.classList.remove('active');
   }
-  function closeSettings() { document.getElementById('settings-drawer').classList.remove('show'); }
-  function saveSettings() {
-    localStorage.setItem(GEMINI_KEY_STORE, document.getElementById('input-gemini').value.trim());
-    localStorage.setItem(WEBHOOK_STORE,    document.getElementById('input-webhook').value.trim());
-    closeSettings();
+}
+
+// ── CAPTURE ─────────────────────────────────────────────────
+function captureFrame() {
+  const MAX_W = 800;
+  let w = video.videoWidth, h = video.videoHeight;
+  if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+  canvas.width = w; canvas.height = h;
+  canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+  return canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+}
+
+// ── GEMINI ──────────────────────────────────────────────────
+async function callGemini(base64Image) {
+  const key = LS.get('gemini_key');
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`;
+  const body = {
+    contents: [{ parts: [
+      { inline_data: { mime_type: 'image/jpeg', data: base64Image } },
+      { text: 'Return JSON only, no markdown: {"first_name":"","last_name":"","company":""}. Extract from badge. Null if missing.' }
+    ]}],
+    generationConfig: { thinkingConfig: { thinkingBudget: 0 } }
+  };
+  const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(`Gemini ${res.status}`);
+  const data = await res.json();
+  const raw = data.candidates[0].content.parts[0].text;
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+}
+
+// ── N8N BACKGROUND SAVE ─────────────────────────────────────
+function saveToExcel(parsed) {
+  const url = LS.get('webhook_url');
+  if (!url) return;
+  const ind = document.getElementById('saving-indicator');
+  ind.classList.add('show');
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company })
+  }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
+}
+
+// ── SCAN ────────────────────────────────────────────────────
+async function triggerScan() {
+  if (isScanning) return;
+  isScanning = true;
+  stableFrames = 0;
+
+  try {
+    const image = captureFrame();
+    if (!image || image.length < 1000) { showError('Capture failed. Try again.'); return; }
+    const parsed = await callGemini(image);
+    showSuccess(parsed);
+    saveToExcel(parsed);
+  } catch(e) {
+    console.error(e);
+    showError('Could not read badge. Try again.');
   }
-  function clearCount() { localStorage.setItem(COUNT_STORE, '0'); updateCounter(); }
+}
+
+// Manual tap fallback
+scanBtn.addEventListener('click', () => {
+  if (isScanning || scanBtn.disabled) return;
+  triggerScan();
+});
+
+// ── RESULT UI ───────────────────────────────────────────────
+const overlay = document.getElementById('result-overlay');
+const card = document.getElementById('result-card');
+
+function showSuccess(data) {
+  card.className = 'result-card success';
+  document.getElementById('result-status').textContent = '✓ Badge captured';
+  document.getElementById('result-name').textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || '—';
+  document.getElementById('result-company').textContent = data.company || '—';
+  document.getElementById('result-message').textContent = '';
+  overlay.classList.add('show');
+  incrementCounter();
+}
+
+function showError(msg) {
+  card.className = 'result-card error';
+  document.getElementById('result-status').textContent = '✕ Scan failed';
+  document.getElementById('result-name').textContent = '';
+  document.getElementById('result-company').textContent = '';
+  document.getElementById('result-message').textContent = msg;
+  overlay.classList.add('show');
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  overlay.classList.remove('show');
+  setFrameState('idle', 'Point camera at badge', 0);
+  isScanning = false;
+  prevImageData = null;
+});
+
+// ── INIT ────────────────────────────────────────────────────
+document.getElementById('gemini-key').value = LS.get('gemini_key');
+document.getElementById('webhook-url').value = LS.get('webhook_url');
+
+if (LS.get('gemini_key') && LS.get('webhook_url')) {
+  showApp();
+} else {
+  configEl.style.display = 'flex';
+}
 </script>
 </body>
 </html>
