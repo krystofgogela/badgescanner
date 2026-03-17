@@ -901,6 +901,14 @@ document.getElementById('sheet-day1').value=LS.get('sheet_day1');
 document.getElementById('label-day2').value=LS.get('label_day2');
 document.getElementById('sheet-day2').value=LS.get('sheet_day2');
 
+// Pre-fill defaults if not already set
+if (!LS.get('gemini_key')) LS.set('gemini_key','AIzaSyDA6YrfimPHXx5BGq5stPAIKe6mWGBCyjM');
+if (!LS.get('webhook_url')) LS.set('webhook_url','https://n8n.pfm-intelligence.com/webhook/0bb1992e-a610-4401-af63-402efd4d51f4');
+if (!LS.get('label_day1')) LS.set('label_day1','22 April');
+if (!LS.get('sheet_day1')) LS.set('sheet_day1','{00000000-0001-0000-0000-000000000000}');
+if (!LS.get('label_day2')) LS.set('label_day2','23 April');
+if (!LS.get('sheet_day2')) LS.set('sheet_day2','{562517FD-B185-47BD-B223-42D52A1726F4}');
+
 const allSet=LS.get('gemini_key')&&LS.get('webhook_url')&&LS.get('sheet_day1')&&LS.get('sheet_day2');
 if (allSet) showApp(); else configEl.style.display='flex';
 </script>
