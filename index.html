@@ -42,7 +42,7 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 .header-logo-name{font-size:12px;font-weight:600;letter-spacing:.02em;}
 #header-right{display:flex;align-items:center;gap:8px;}
 #counter{background:rgba(12,17,29,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:500;color:var(--red-light);}
-#settings-btn{background:rgba(12,17,29,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:15px;}
+.icon-btn{background:rgba(12,17,29,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:15px;}
 #day-toggle{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:10;background:rgba(12,17,29,.8);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:24px;padding:3px;display:flex;gap:2px;}
 .day-btn{font-family:'Instrument Sans',Helvetica,sans-serif;font-size:12px;font-weight:500;padding:6px 18px;border-radius:20px;border:none;background:transparent;color:var(--muted-light);cursor:pointer;transition:all .2s;white-space:nowrap;}
 .day-btn.active{background:var(--red);color:#fff;font-weight:600;}
@@ -73,38 +73,58 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 #scan-btn:active{transform:scale(.93);}
 #scan-btn:disabled{opacity:.4;box-shadow:none;}
 
-/* RESULT OVERLAY */
-#result-overlay{position:absolute;inset:0;background:rgba(12,17,29,.92);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;z-index:20;}
-#result-overlay.show{display:flex;}
-.result-card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px;width:100%;max-width:360px;}
-.result-card.success{border-color:var(--red);}
-.result-card.error{border-color:#475467;}
-.result-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.result-status{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
-.success .result-status{color:var(--red-light);}
-.error .result-status{color:var(--muted-light);}
-.result-day-badge{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(240,68,56,.12);color:var(--red-light);border:1px solid rgba(240,68,56,.25);border-radius:12px;padding:3px 10px;}
-.result-divider{height:1px;background:var(--border);margin-bottom:16px;}
-.review-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
-.review-input{background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:15px;font-weight:600;outline:none;width:100%;transition:border-color .2s;margin-bottom:10px;}
-.review-input:focus{border-color:var(--red);}
-.review-input.company{font-size:13px;font-weight:500;color:var(--muted-light);}
-.result-actions{display:flex;gap:10px;width:100%;max-width:360px;}
-.btn-secondary{flex:1;background:transparent;border:1px solid var(--border);border-radius:8px;padding:13px;color:var(--muted-light);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:500;cursor:pointer;}
-.btn-primary{flex:2;background:var(--red);border:none;border-radius:8px;padding:13px;color:#fff;font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
-.btn-primary:active{background:var(--red-dark);}
-#saved-state{display:none;flex-direction:column;align-items:center;gap:16px;width:100%;}
-#saved-state.show{display:flex;}
-.saved-card{background:var(--bg-2);border:1px solid var(--red);border-radius:12px;padding:20px;width:100%;max-width:360px;}
-.saved-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.saved-status{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red-light);}
-.saved-name{font-size:20px;font-weight:700;line-height:1.2;margin-bottom:4px;}
-.saved-company{font-size:13px;font-weight:500;color:var(--muted-light);}
-.result-message{font-size:14px;color:var(--muted-light);line-height:1.5;margin-top:8px;}
+/* OVERLAYS — shared */
+.overlay{position:absolute;inset:0;background:rgba(12,17,29,.92);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;z-index:20;}
+.overlay.show{display:flex;}
+.card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px;width:100%;max-width:360px;}
+.card.red{border-color:var(--red);}
+.card.err{border-color:#475467;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-status{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+.red .card-status{color:var(--red-light);}
+.err .card-status{color:var(--muted-light);}
+.day-badge{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(240,68,56,.12);color:var(--red-light);border:1px solid rgba(240,68,56,.25);border-radius:12px;padding:3px 10px;}
+.divider{height:1px;background:var(--border);margin-bottom:16px;}
+.lbl{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
+.inp{background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:15px;font-weight:600;outline:none;width:100%;transition:border-color .2s;margin-bottom:10px;}
+.inp:focus{border-color:var(--red);}
+.inp.sm{font-size:13px;font-weight:500;color:var(--muted-light);}
+.actions{display:flex;gap:10px;width:100%;max-width:360px;}
+.btn-sec{flex:1;background:transparent;border:1px solid var(--border);border-radius:8px;padding:13px;color:var(--muted-light);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:500;cursor:pointer;}
+.btn-pri{flex:2;background:var(--red);border:none;border-radius:8px;padding:13px;color:#fff;font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
+.btn-pri:active{background:var(--red-dark);}
+.btn-pri.full{flex:1;}
+.err-msg{font-size:14px;color:var(--muted-light);line-height:1.5;margin-top:8px;}
+
+/* SCORE INPUT */
+#score-big{font-size:48px;font-weight:700;text-align:center;background:transparent;border:none;border-bottom:2px solid var(--border);color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;width:100%;max-width:200px;outline:none;padding:8px 0;margin:16px auto;display:block;transition:border-color .2s;}
+#score-big:focus{border-color:var(--red);}
+.score-name{font-size:16px;font-weight:600;text-align:center;margin-bottom:4px;}
+.score-company{font-size:13px;color:var(--muted-light);text-align:center;margin-bottom:8px;}
+
+/* SAVING INDICATOR */
 #saving-indicator{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:rgba(12,17,29,.9);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:500;color:var(--muted-light);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:30;}
 #saving-indicator.show{opacity:1;}
 
-/* iOS install prompt */
+/* HISTORY SCREEN */
+#history-screen{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;}
+#history-screen.show{display:flex;}
+.history-header{display:flex;align-items:center;gap:12px;padding:56px 20px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);}
+.history-header h2{font-size:18px;font-weight:700;flex:1;}
+#history-close{background:none;border:none;color:var(--muted-light);font-size:22px;cursor:pointer;padding:4px;}
+#history-list{flex:1;overflow-y:auto;padding:16px;}
+.history-empty{text-align:center;color:var(--muted);font-size:14px;padding:48px 0;}
+.history-item{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .2s;}
+.history-item:active{border-color:var(--red);}
+.history-item-left{flex:1;}
+.history-item-name{font-size:15px;font-weight:600;margin-bottom:2px;}
+.history-item-company{font-size:12px;color:var(--muted-light);}
+.history-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.history-score{font-size:18px;font-weight:700;color:var(--red-light);}
+.history-score.empty{font-size:13px;color:var(--muted);font-weight:400;}
+.history-day{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+
+/* iOS banner */
 #ios-banner{position:fixed;bottom:24px;left:16px;right:16px;background:var(--bg-2);border:1px solid var(--red);border-radius:12px;padding:16px 20px;display:none;flex-direction:column;gap:10px;z-index:200;box-shadow:0 8px 32px rgba(240,68,56,.15);}
 #ios-banner.show{display:flex;}
 .ios-top{display:flex;align-items:center;justify-content:space-between;}
@@ -115,6 +135,7 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 </head>
 <body>
 
+<!-- CONFIG -->
 <div id="config">
   <div class="config-header">
     <div class="config-logo">
@@ -122,25 +143,15 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
       <div class="config-logo-sub">Leaderboard Badge Scanner</div>
     </div>
     <h2>Scanner Setup</h2>
-    <p>Configure your credentials and sheets.</p>
+    <p>Enter your Gemini API key to get started.</p>
   </div>
   <div class="config-body">
-    <div class="field"><label>Gemini API Key</label><input type="password" id="gemini-key" autocomplete="off"></div>
-    <div class="field"><label>n8n Webhook URL</label><input type="url" id="webhook-url" autocomplete="off"></div>
-    <div class="section-label">Day 1</div>
-    <div class="field-row">
-      <div class="field"><label>Label</label><input type="text" id="label-day1" autocomplete="off"></div>
-      <div class="field"><label>Sheet ID</label><input type="text" id="sheet-day1" autocomplete="off"></div>
-    </div>
-    <div class="section-label">Day 2</div>
-    <div class="field-row">
-      <div class="field"><label>Label</label><input type="text" id="label-day2" autocomplete="off"></div>
-      <div class="field"><label>Sheet ID</label><input type="text" id="sheet-day2" autocomplete="off"></div>
-    </div>
+    <div class="field"><label>Gemini API Key</label><input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off"></div>
     <button id="config-save">Start Scanning</button>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div id="header">
     <div id="header-logo">
@@ -149,12 +160,13 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     </div>
     <div id="header-right">
       <div id="counter">0 scanned</div>
-      <div id="settings-btn">⚙</div>
+      <div class="icon-btn" id="history-btn">🕐</div>
+      <div class="icon-btn" id="settings-btn">⚙</div>
     </div>
   </div>
   <div id="day-toggle">
-    <button class="day-btn active" id="btn-day1">Day 1</button>
-    <button class="day-btn" id="btn-day2">Day 2</button>
+    <button class="day-btn active" id="btn-day1">22 April</button>
+    <button class="day-btn" id="btn-day2">23 April</button>
   </div>
   <div id="viewfinder">
     <video id="video" autoplay playsinline muted></video>
@@ -167,48 +179,100 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     <div id="stability-bar-wrap"><div id="stability-bar"></div></div>
     <button id="scan-btn" disabled>TAP</button>
   </div>
-  <div id="result-overlay">
-    <div id="review-state" style="display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;">
-      <div class="result-card success">
-        <div class="result-top">
-          <div class="result-status">Review & Confirm</div>
-          <div class="result-day-badge" id="review-day-badge"></div>
-        </div>
-        <div class="result-divider"></div>
-        <div class="review-label">Name</div>
-        <input class="review-input" id="review-name" type="text" placeholder="Full name">
-        <div class="review-label">Company</div>
-        <input class="review-input company" id="review-company" type="text" placeholder="Company">
+
+  <!-- REVIEW OVERLAY -->
+  <div class="overlay" id="review-overlay">
+    <div class="card red">
+      <div class="card-top">
+        <div class="card-status">Review & Confirm</div>
+        <div class="day-badge" id="review-day-badge"></div>
       </div>
-      <div class="result-actions">
-        <button class="btn-secondary" id="btn-discard">Discard</button>
-        <button class="btn-primary" id="btn-confirm">Save to Excel</button>
-      </div>
+      <div class="divider"></div>
+      <div class="lbl">Name</div>
+      <input class="inp" id="review-name" type="text" placeholder="Full name">
+      <div class="lbl">Company</div>
+      <input class="inp sm" id="review-company" type="text" placeholder="Company">
     </div>
-    <div id="saved-state">
-      <div class="saved-card">
-        <div class="saved-top">
-          <div class="saved-status">✓ Saved</div>
-          <div class="result-day-badge" id="saved-day-badge"></div>
-        </div>
-        <div class="result-divider"></div>
-        <div class="saved-name" id="saved-name"></div>
-        <div class="saved-company" id="saved-company"></div>
-      </div>
-      <div class="result-actions"><button class="btn-primary" id="btn-next">Scan Next</button></div>
-    </div>
-    <div id="error-state" style="display:none;flex-direction:column;align-items:center;gap:16px;width:100%;">
-      <div class="result-card error">
-        <div class="result-top"><div class="result-status">✕ Scan Failed</div></div>
-        <div class="result-divider"></div>
-        <div class="result-message" id="error-message"></div>
-      </div>
-      <div class="result-actions"><button class="btn-primary" id="btn-retry">Try Again</button></div>
+    <div class="actions">
+      <button class="btn-sec" id="btn-discard">Discard</button>
+      <button class="btn-pri" id="btn-confirm">Save →</button>
     </div>
   </div>
-  <div id="saving-indicator">Saving to Excel...</div>
+
+  <!-- SCORE OVERLAY -->
+  <div class="overlay" id="score-overlay">
+    <div class="card red" style="text-align:center;">
+      <div class="card-top" style="justify-content:center;">
+        <div class="card-status">Input Score</div>
+      </div>
+      <div class="divider"></div>
+      <div class="score-name" id="score-name"></div>
+      <div class="score-company" id="score-company"></div>
+      <input id="score-big" type="number" inputmode="decimal" placeholder="0.0" step="0.01">
+    </div>
+    <div class="actions">
+      <button class="btn-sec" id="btn-skip-score">Skip for now</button>
+      <button class="btn-pri" id="btn-save-score">Save Score</button>
+    </div>
+  </div>
+
+  <!-- SAVED OVERLAY -->
+  <div class="overlay" id="saved-overlay">
+    <div class="card red">
+      <div class="card-top">
+        <div class="card-status">✓ Saved</div>
+        <div class="day-badge" id="saved-day-badge"></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px;" id="saved-name"></div>
+      <div style="font-size:13px;color:var(--muted-light);" id="saved-company"></div>
+      <div style="font-size:13px;color:var(--muted-light);margin-top:6px;" id="saved-score-display"></div>
+    </div>
+    <div class="actions">
+      <button class="btn-pri btn-full" id="btn-next">Scan Next</button>
+    </div>
+  </div>
+
+  <!-- ERROR OVERLAY -->
+  <div class="overlay" id="error-overlay">
+    <div class="card err">
+      <div class="card-top"><div class="card-status">✕ Scan Failed</div></div>
+      <div class="divider"></div>
+      <div class="err-msg" id="error-message"></div>
+    </div>
+    <div class="actions"><button class="btn-pri btn-full" id="btn-retry">Try Again</button></div>
+  </div>
+
+  <div id="saving-indicator">Saving...</div>
 </div>
 
+<!-- HISTORY SCREEN -->
+<div id="history-screen">
+  <div class="history-header">
+    <h2>Scan History</h2>
+    <button id="history-close">✕</button>
+  </div>
+  <div id="history-list"></div>
+
+  <!-- HISTORY SCORE OVERLAY (inside history) -->
+  <div class="overlay" id="history-score-overlay">
+    <div class="card red" style="text-align:center;">
+      <div class="card-top" style="justify-content:center;">
+        <div class="card-status">Update Score</div>
+      </div>
+      <div class="divider"></div>
+      <div class="score-name" id="hscore-name"></div>
+      <div class="score-company" id="hscore-company"></div>
+      <input id="hscore-big" type="number" inputmode="decimal" placeholder="0.0" step="0.01">
+    </div>
+    <div class="actions">
+      <button class="btn-sec" id="btn-hcancel">Cancel</button>
+      <button class="btn-pri" id="btn-hsave">Save Score</button>
+    </div>
+  </div>
+</div>
+
+<!-- iOS BANNER -->
 <div id="ios-banner">
   <div class="ios-top">
     <div class="ios-title">Install this app</div>
@@ -224,26 +288,24 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 <script>
 const LS={get:k=>localStorage.getItem(k)||'',set:(k,v)=>localStorage.setItem(k,v)};
 
-// ── HARDCODED CONFIG ─────────────────────────────────────────
-const CFG={
-  gemini_key:'',
-  webhook_url:'https://n8n.pfm-intelligence.com/webhook/0bb1992e-a610-4401-af63-402efd4d51f4',
-  label_day1:'22 April',
-  sheet_day1:'{00000000-0001-0000-0000-000000000000}',
-  label_day2:'23 April',
-  sheet_day2:'{562517FD-B185-47BD-B223-42D52A1726F4}'
+// ── CONFIG ───────────────────────────────────────────────────
+const WEBHOOK_APPEND='https://n8n.pfm-intelligence.com/webhook/0bb1992e-a610-4401-af63-402efd4d51f4';
+const WEBHOOK_SCORE='https://n8n.pfm-intelligence.com/webhook/update-score';
+const SHEETS={
+  1:{label:'22 April',id:'{00000000-0001-0000-0000-000000000000}'},
+  2:{label:'23 April',id:'{562517FD-B185-47BD-B223-42D52A1726F4}'}
 };
 
-function getCFG(k){return LS.get(k)||CFG[k];}
+function getKey(){return LS.get('gemini_key');}
+function getSheet(){return SHEETS[activeDay].id;}
+function getLabel(){return SHEETS[activeDay].label;}
 
 // ── SERVICE WORKER ───────────────────────────────────────────
 if('serviceWorker'in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/badgescanner/sw.js').catch(()=>{});
-  });
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/badgescanner/sw.js').catch(()=>{}));
 }
 
-// ── iOS INSTALL BANNER ───────────────────────────────────────
+// ── iOS BANNER ───────────────────────────────────────────────
 const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
 const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
 if(isIos&&!isStandalone&&!LS.get('ios_dismissed')){
@@ -255,37 +317,23 @@ document.getElementById('ios-dismiss').addEventListener('click',()=>{
 });
 
 // ── CONFIG SCREEN ────────────────────────────────────────────
-const configEl=document.getElementById('config');
-const appEl=document.getElementById('app');
-
-function openConfig(){
-  document.getElementById('gemini-key').value=getCFG('gemini_key');
-  document.getElementById('webhook-url').value=getCFG('webhook_url');
-  document.getElementById('label-day1').value=getCFG('label_day1');
-  document.getElementById('sheet-day1').value=getCFG('sheet_day1');
-  document.getElementById('label-day2').value=getCFG('label_day2');
-  document.getElementById('sheet-day2').value=getCFG('sheet_day2');
-  configEl.style.display='flex';
-  appEl.style.display='none';
-  stopMotionDetection();
-}
-
 document.getElementById('config-save').addEventListener('click',()=>{
-  LS.set('gemini_key',document.getElementById('gemini-key').value.trim());
-  LS.set('webhook_url',document.getElementById('webhook-url').value.trim());
-  LS.set('label_day1',document.getElementById('label-day1').value.trim());
-  LS.set('sheet_day1',document.getElementById('sheet-day1').value.trim());
-  LS.set('label_day2',document.getElementById('label-day2').value.trim());
-  LS.set('sheet_day2',document.getElementById('sheet-day2').value.trim());
+  const key=document.getElementById('gemini-key').value.trim();
+  if(!key){alert('API key required.');return;}
+  LS.set('gemini_key',key);
   startApp();
 });
 
-document.getElementById('settings-btn').addEventListener('click',openConfig);
+document.getElementById('settings-btn').addEventListener('click',()=>{
+  stopMotionDetection();
+  document.getElementById('gemini-key').value=getKey();
+  document.getElementById('config').style.display='flex';
+  document.getElementById('app').style.display='none';
+});
 
-// ── APP START ────────────────────────────────────────────────
 function startApp(){
-  configEl.style.display='none';
-  appEl.style.display='flex';
+  document.getElementById('config').style.display='none';
+  document.getElementById('app').style.display='flex';
   updateDayToggleLabels();
   startCamera();
 }
@@ -296,17 +344,13 @@ const btnDay1=document.getElementById('btn-day1');
 const btnDay2=document.getElementById('btn-day2');
 
 function updateDayToggleLabels(){
-  btnDay1.textContent=getCFG('label_day1');
-  btnDay2.textContent=getCFG('label_day2');
   btnDay1.classList.toggle('active',activeDay===1);
   btnDay2.classList.toggle('active',activeDay===2);
 }
 
-function setActiveDay(d){activeDay=d;LS.set('active_day',d);btnDay1.classList.toggle('active',d===1);btnDay2.classList.toggle('active',d===2);}
+function setActiveDay(d){activeDay=d;LS.set('active_day',d);updateDayToggleLabels();}
 btnDay1.addEventListener('click',()=>setActiveDay(1));
 btnDay2.addEventListener('click',()=>setActiveDay(2));
-function getSheet(){return activeDay===1?getCFG('sheet_day1'):getCFG('sheet_day2');}
-function getLabel(){return activeDay===1?getCFG('label_day1'):getCFG('label_day2');}
 
 // ── COUNTER ──────────────────────────────────────────────────
 const counterEl=document.getElementById('counter');
@@ -314,6 +358,27 @@ let count=parseInt(LS.get('scan_count')||'0');
 function updateCounter(){counterEl.textContent=count+' scanned';}
 function incrementCounter(){count++;LS.set('scan_count',count);updateCounter();}
 updateCounter();
+
+// ── HISTORY STORAGE ──────────────────────────────────────────
+function todayKey(){return'history_'+new Date().toISOString().slice(0,10);}
+
+function getHistory(){
+  try{return JSON.parse(localStorage.getItem(todayKey())||'[]');}catch{return[];}
+}
+
+function saveHistory(arr){localStorage.setItem(todayKey(),JSON.stringify(arr));}
+
+function addToHistory(entry){
+  const arr=getHistory();
+  arr.unshift(entry);
+  saveHistory(arr);
+}
+
+function updateHistoryScore(scanId,score){
+  const arr=getHistory();
+  const item=arr.find(e=>e.scan_id===scanId);
+  if(item){item.score=score;saveHistory(arr);}
+}
 
 // ── CAMERA ───────────────────────────────────────────────────
 const video=document.getElementById('video');
@@ -327,22 +392,11 @@ async function startCamera(){
       video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false
     });
     video.srcObject=stream;
-
-    const onReady=()=>{
-      scanBtn.disabled=false;
-      motionCanvas.width=160;motionCanvas.height=90;
-      startMotionDetection();
-    };
-
+    const onReady=()=>{scanBtn.disabled=false;motionCanvas.width=160;motionCanvas.height=90;startMotionDetection();};
     video.onplaying=onReady;
-
     try{await video.play();}catch(e){showTapToStart();}
-
     setTimeout(()=>{if(scanBtn.disabled)onReady();},2500);
-
-  }catch(e){
-    alert('Camera access required. Please allow camera access and refresh.');
-  }
+  }catch(e){alert('Camera access required. Please allow camera access and refresh.');}
 }
 
 function showTapToStart(){
@@ -358,8 +412,7 @@ const frameEl=document.getElementById('scan-frame');
 const statusText=document.getElementById('status-text');
 const stabilityBarWrap=document.getElementById('stability-bar-wrap');
 const stabilityBar=document.getElementById('stability-bar');
-
-const MOTION_THRESHOLD=22,STABLE_FRAMES_NEEDED=10,CONTRAST_THRESHOLD=30,EDGE_THRESHOLD=7,INTERVAL=50;
+const MOTION_THRESHOLD=22,STABLE_FRAMES=10,CONTRAST=30,EDGES=7,INTERVAL=50;
 let prevImageData=null,stableFrames=0,motionInterval=null,isScanning=false;
 
 function getFrameStats(){
@@ -367,15 +420,14 @@ function getFrameStats(){
   const sw=video.videoWidth||640,sh=video.videoHeight||480;
   ctx.drawImage(video,sw*.2,sh*.2,sw*.6,sh*.6,0,0,160,90);
   const cur=ctx.getImageData(0,0,160,90),px=cur.data,w=160,h=90;
-  let sum=0,sumSq=0,n=0;
-  const br=new Float32Array(w*h);
+  let sum=0,sumSq=0,n=0;const br=new Float32Array(w*h);
   for(let i=0;i<px.length;i+=4){const b=(px[i]+px[i+1]+px[i+2])/3;br[n]=b;sum+=b;sumSq+=b*b;n++;}
   const mean=sum/n,stdDev=Math.sqrt(sumSq/n-mean*mean);
   let edges=0;
   for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=y*w+x;if(Math.abs(br[i+1]-br[i-1])+Math.abs(br[i+w]-br[i-w])>25)edges++;}
   const edgeDensity=edges/(w*h)*100;
   let motion=0;
-  if(prevImageData){for(let i=0;i<px.length;i+=4)motion+=Math.abs(px[i]-prevImageData.data[i]);motion/=n;}else{motion=999;}
+  if(prevImageData){for(let i=0;i<px.length;i+=4)motion+=Math.abs(px[i]-prevImageData.data[i]);motion/=n;}else motion=999;
   prevImageData=cur;
   return{stdDev,edgeDensity,motion};
 }
@@ -384,12 +436,12 @@ function startMotionDetection(){
   motionInterval=setInterval(()=>{
     if(isScanning)return;
     const{stdDev,edgeDensity,motion}=getFrameStats();
-    if(stdDev<=CONTRAST_THRESHOLD||edgeDensity<=EDGE_THRESHOLD){stableFrames=0;setFrameState('idle','Point camera at badge',0);return;}
-    if(motion>MOTION_THRESHOLD){stableFrames=Math.max(0,stableFrames-1);setFrameState('detecting','Hold steady...',stableFrames/STABLE_FRAMES_NEEDED*100);}
+    if(stdDev<=CONTRAST||edgeDensity<=EDGES){stableFrames=0;setFrameState('idle','Point camera at badge',0);return;}
+    if(motion>MOTION_THRESHOLD){stableFrames=Math.max(0,stableFrames-1);setFrameState('detecting','Hold steady...',stableFrames/STABLE_FRAMES*100);}
     else{
-      stableFrames=Math.min(STABLE_FRAMES_NEEDED,stableFrames+1);
-      const p=stableFrames/STABLE_FRAMES_NEEDED*100;
-      if(stableFrames>=STABLE_FRAMES_NEEDED){setFrameState('locked','Scanning...',100);triggerScan();}
+      stableFrames=Math.min(STABLE_FRAMES,stableFrames+1);
+      const p=stableFrames/STABLE_FRAMES*100;
+      if(stableFrames>=STABLE_FRAMES){setFrameState('locked','Scanning...',100);triggerScan();}
       else setFrameState('detecting','Hold steady...',p);
     }
   },INTERVAL);
@@ -398,11 +450,9 @@ function startMotionDetection(){
 function stopMotionDetection(){if(motionInterval){clearInterval(motionInterval);motionInterval=null;}}
 
 function setFrameState(state,text,progress){
-  frameEl.className='scan-frame '+state;
-  statusText.className=state;statusText.textContent=text;
+  frameEl.className='scan-frame '+state;statusText.className=state;statusText.textContent=text;
   stabilityBar.style.width=progress+'%';
-  if(state==='idle')stabilityBarWrap.classList.remove('show');
-  else stabilityBarWrap.classList.add('show');
+  if(state==='idle')stabilityBarWrap.classList.remove('show');else stabilityBarWrap.classList.add('show');
 }
 
 // ── CAPTURE ──────────────────────────────────────────────────
@@ -414,9 +464,11 @@ function captureFrame(){
   return canvas.toDataURL('image/jpeg',.5).split(',')[1];
 }
 
+function genScanId(){return'scan_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
+
 // ── GEMINI ───────────────────────────────────────────────────
 async function callGemini(b64){
-  const key=getCFG('gemini_key');
+  const key=getKey();
   const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key='+key;
   const body={contents:[{parts:[
     {inline_data:{mime_type:'image/jpeg',data:b64}},
@@ -428,18 +480,29 @@ async function callGemini(b64){
   return JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());
 }
 
-// ── SAVE ─────────────────────────────────────────────────────
-function saveToExcel(fn,ln,co){
-  const url=getCFG('webhook_url');
-  if(!url)return;
+// ── SAVE TO EXCEL (append) ───────────────────────────────────
+function saveAppend(fn,ln,co,scanId){
   const ind=document.getElementById('saving-indicator');
   ind.classList.add('show');
-  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({first_name:fn,last_name:ln,company:co,sheet:getSheet()})
+  return fetch(WEBHOOK_APPEND,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({first_name:fn,last_name:ln,company:co,score:'',scan_id:scanId,sheet:getSheet()})
   }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
 }
 
-// ── SCAN ─────────────────────────────────────────────────────
+// ── UPDATE SCORE ─────────────────────────────────────────────
+function saveScore(scanId,score,sheet){
+  const ind=document.getElementById('saving-indicator');
+  ind.classList.add('show');
+  return fetch(WEBHOOK_SCORE,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({scan_id:scanId,score:parseFloat(score),sheet:sheet})
+  }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
+}
+
+// ── SCAN FLOW ────────────────────────────────────────────────
+let currentScan=null;
+
 async function triggerScan(){
   if(isScanning)return;
   isScanning=true;stableFrames=0;
@@ -447,57 +510,163 @@ async function triggerScan(){
     const img=captureFrame();
     if(!img||img.length<1000){showError('Capture failed. Try again.');return;}
     const parsed=await callGemini(img);
-    showReview(parsed);
+    currentScan={
+      scan_id:genScanId(),
+      first_name:parsed.first_name,
+      last_name:parsed.last_name,
+      company:parsed.company,
+      score:null,
+      sheet:getSheet(),
+      label:getLabel(),
+      ts:Date.now()
+    };
+    showReview();
   }catch(e){console.error(e);showError(e.message||'Could not read badge. Try again.');}
 }
 
 scanBtn.addEventListener('click',()=>{if(!isScanning&&!scanBtn.disabled)triggerScan();});
 
-// ── RESULT UI ────────────────────────────────────────────────
-const overlay=document.getElementById('result-overlay');
-const reviewState=document.getElementById('review-state');
-const savedState=document.getElementById('saved-state');
-const errorState=document.getElementById('error-state');
-
-function showReview(data){
-  document.getElementById('review-name').value=[data.first_name,data.last_name].filter(Boolean).join(' ');
-  document.getElementById('review-company').value=data.company||'';
-  document.getElementById('review-day-badge').textContent=getLabel();
-  reviewState.style.display='flex';savedState.classList.remove('show');errorState.style.display='none';
-  overlay.classList.add('show');
-}
-
-function showError(msg){
-  errorState.style.display='flex';reviewState.style.display='none';savedState.classList.remove('show');
-  document.getElementById('error-message').textContent=msg;
-  overlay.classList.add('show');
+// ── REVIEW ───────────────────────────────────────────────────
+function showReview(){
+  document.getElementById('review-name').value=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
+  document.getElementById('review-company').value=currentScan.company||'';
+  document.getElementById('review-day-badge').textContent=currentScan.label;
+  showOverlay('review-overlay');
 }
 
 document.getElementById('btn-confirm').addEventListener('click',()=>{
   const full=document.getElementById('review-name').value.trim();
   const co=document.getElementById('review-company').value.trim();
   const parts=full.split(' ');
-  saveToExcel(parts[0]||null,parts.slice(1).join(' ')||null,co||null);
-  document.getElementById('saved-name').textContent=full||'—';
-  document.getElementById('saved-company').textContent=co||'—';
-  document.getElementById('saved-day-badge').textContent=getLabel();
-  reviewState.style.display='none';savedState.classList.add('show');
+  currentScan.first_name=parts[0]||null;
+  currentScan.last_name=parts.slice(1).join(' ')||null;
+  currentScan.company=co||null;
+  saveAppend(currentScan.first_name,currentScan.last_name,currentScan.company,currentScan.scan_id);
+  addToHistory({...currentScan,score:null});
   incrementCounter();
+  showScoreInput();
 });
 
-document.getElementById('btn-discard').addEventListener('click',resetOverlay);
-document.getElementById('btn-next').addEventListener('click',resetOverlay);
-document.getElementById('btn-retry').addEventListener('click',resetOverlay);
+document.getElementById('btn-discard').addEventListener('click',resetToScanner);
 
-function resetOverlay(){
-  overlay.classList.remove('show');
-  reviewState.style.display='flex';savedState.classList.remove('show');errorState.style.display='none';
-  setFrameState('idle','Point camera at badge',0);
-  isScanning=false;prevImageData=null;
+// ── SCORE INPUT ───────────────────────────────────────────────
+function showScoreInput(){
+  const full=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
+  document.getElementById('score-name').textContent=full||'—';
+  document.getElementById('score-company').textContent=currentScan.company||'';
+  document.getElementById('score-big').value='';
+  showOverlay('score-overlay');
+  setTimeout(()=>document.getElementById('score-big').focus(),300);
 }
 
-// ── INIT — go straight to scanner if key exists ──────────────
-if(LS.get('gemini_key')){startApp();}else{openConfig();}
+document.getElementById('btn-save-score').addEventListener('click',()=>{
+  const val=document.getElementById('score-big').value.trim();
+  if(!val){alert('Please enter a score or tap Skip.');return;}
+  currentScan.score=parseFloat(val);
+  updateHistoryScore(currentScan.scan_id,currentScan.score);
+  saveScore(currentScan.scan_id,currentScan.score,currentScan.sheet);
+  showSaved();
+});
+
+document.getElementById('btn-skip-score').addEventListener('click',()=>{
+  currentScan.score=null;
+  showSaved();
+});
+
+// ── SAVED ────────────────────────────────────────────────────
+function showSaved(){
+  const full=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
+  document.getElementById('saved-name').textContent=full||'—';
+  document.getElementById('saved-company').textContent=currentScan.company||'—';
+  document.getElementById('saved-day-badge').textContent=currentScan.label;
+  document.getElementById('saved-score-display').textContent=currentScan.score!=null?'Score: '+currentScan.score:'Score: not entered';
+  showOverlay('saved-overlay');
+}
+
+document.getElementById('btn-next').addEventListener('click',resetToScanner);
+
+// ── ERROR ────────────────────────────────────────────────────
+function showError(msg){
+  document.getElementById('error-message').textContent=msg;
+  showOverlay('error-overlay');
+}
+
+document.getElementById('btn-retry').addEventListener('click',resetToScanner);
+
+// ── OVERLAY HELPERS ───────────────────────────────────────────
+const overlayIds=['review-overlay','score-overlay','saved-overlay','error-overlay'];
+
+function showOverlay(id){
+  overlayIds.forEach(oid=>{
+    document.getElementById(oid).classList.toggle('show',oid===id);
+  });
+}
+
+function resetToScanner(){
+  overlayIds.forEach(oid=>document.getElementById(oid).classList.remove('show'));
+  setFrameState('idle','Point camera at badge',0);
+  isScanning=false;prevImageData=null;currentScan=null;
+}
+
+// ── HISTORY SCREEN ───────────────────────────────────────────
+let historyEditEntry=null;
+
+document.getElementById('history-btn').addEventListener('click',()=>{
+  renderHistory();
+  document.getElementById('history-screen').classList.add('show');
+});
+
+document.getElementById('history-close').addEventListener('click',()=>{
+  document.getElementById('history-screen').classList.remove('show');
+  document.getElementById('history-score-overlay').classList.remove('show');
+});
+
+function renderHistory(){
+  const list=document.getElementById('history-list');
+  const arr=getHistory();
+  if(arr.length===0){list.innerHTML='<div class="history-empty">No scans yet today.</div>';return;}
+  list.innerHTML=arr.map(e=>{
+    const name=[e.first_name,e.last_name].filter(Boolean).join(' ')||'—';
+    const scoreHtml=e.score!=null
+      ?'<div class="history-score">'+e.score+'</div>'
+      :'<div class="history-score empty">Tap to add</div>';
+    return '<div class="history-item" data-id="'+e.scan_id+'">'
+      +'<div class="history-item-left"><div class="history-item-name">'+name+'</div><div class="history-item-company">'+(e.company||'—')+'</div></div>'
+      +'<div class="history-item-right">'+scoreHtml+'<div class="history-day">'+e.label+'</div></div>'
+      +'</div>';
+  }).join('');
+
+  list.querySelectorAll('.history-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const id=el.dataset.id;
+      historyEditEntry=getHistory().find(e=>e.scan_id===id);
+      if(!historyEditEntry)return;
+      const name=[historyEditEntry.first_name,historyEditEntry.last_name].filter(Boolean).join(' ');
+      document.getElementById('hscore-name').textContent=name||'—';
+      document.getElementById('hscore-company').textContent=historyEditEntry.company||'';
+      document.getElementById('hscore-big').value=historyEditEntry.score!=null?historyEditEntry.score:'';
+      document.getElementById('history-score-overlay').classList.add('show');
+      setTimeout(()=>document.getElementById('hscore-big').focus(),300);
+    });
+  });
+}
+
+document.getElementById('btn-hsave').addEventListener('click',()=>{
+  const val=document.getElementById('hscore-big').value.trim();
+  if(!val){alert('Please enter a score.');return;}
+  const score=parseFloat(val);
+  updateHistoryScore(historyEditEntry.scan_id,score);
+  saveScore(historyEditEntry.scan_id,score,historyEditEntry.sheet);
+  document.getElementById('history-score-overlay').classList.remove('show');
+  renderHistory();
+});
+
+document.getElementById('btn-hcancel').addEventListener('click',()=>{
+  document.getElementById('history-score-overlay').classList.remove('show');
+});
+
+// ── INIT ─────────────────────────────────────────────────────
+if(getKey()){startApp();}else{document.getElementById('config').style.display='flex';}
 </script>
 </body>
 </html>
