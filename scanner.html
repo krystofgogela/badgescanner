@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Badge Scanner</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap');
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #222;
+      --green: #00ff87;
+      --red: #ff3b3b;
+      --text: #f0f0f0;
+      --muted: #555;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    #viewfinder {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    #topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px 0;
+      pointer-events: all;
+    }
+
+    #counter {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--text);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    #settings-btn {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+    #settings-btn:hover { border-color: var(--green); }
+
+    #frame-guide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      width: min(320px, 80vw);
+      height: min(200px, 50vw);
+      pointer-events: none;
+    }
+    #frame-guide::before,
+    #frame-guide::after,
+    #frame-guide .corner-br,
+    #frame-guide .corner-bl {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--green);
+      border-style: solid;
+    }
+    #frame-guide::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
+    #frame-guide::after  { top: 0; right: 0; border-width: 2px 2px 0 0; }
+    #frame-guide .corner-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+    #frame-guide .corner-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+
+    #scan-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      animation: scan 1.8s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #scan-line.active { opacity: 1; }
+    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+    #bottom {
+      padding: 0 24px 52px;
+      pointer-events: all;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #hint {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'Space Mono', monospace;
+    }
+
+    #scan-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      background: rgba(0,255,135,0.08);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    #scan-btn::before {
+      content: '';
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--green);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    #scan-btn:active::before { transform: scale(0.88); }
+    #scan-btn.loading::before { animation: pulse 0.8s ease infinite; }
+    #scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.85); opacity: 0.5; }
+    }
+
+    /* ── CARDS ── */
+    .sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .sheet.show { opacity: 1; pointer-events: all; }
+    .sheet-inner {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 400px;
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+    .sheet.show .sheet-inner { transform: translateY(0); }
+
+    .sheet-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .dot.err { background: var(--red); }
+
+    #result-name    { font-size: 26px; font-weight: 600; line-height: 1.1; margin-bottom: 6px; }
+    #result-company { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    #error-msg      { font-size: 15px; color: var(--red); margin-bottom: 24px; display: none; }
+
+    .btn-ghost {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--green); background: rgba(0,255,135,0.05); }
+
+    .field-label  { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
+    .field-input  {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      margin-bottom: 16px; outline: none; transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: var(--green); }
+
+    .row { display: flex; gap: 10px; margin-top: 8px; }
+    .btn-primary {
+      flex: 1; padding: 13px; border-radius: 10px; border: none;
+      background: var(--green); color: #000;
+      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      flex: 1; padding: 13px; border-radius: 10px;
+      border: 1px solid var(--border); background: transparent; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer;
+    }
+    .btn-danger {
+      width: 100%; padding: 11px; border-radius: 10px;
+      border: 1px solid #2a2a2a; background: transparent; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
+      margin-top: 8px; transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-danger:hover { color: var(--red); border-color: var(--red); }
+
+    #no-camera {
+      display: none; position: fixed; inset: 0; z-index: 30;
+      background: var(--bg); align-items: center; justify-content: center;
+      text-align: center; padding: 40px; flex-direction: column; gap: 16px;
+    }
+    #no-camera.show { display: flex; }
+    #no-camera strong { font-size: 18px; }
+    #no-camera p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<video id="viewfinder" autoplay playsinline muted></video>
+
+<div id="overlay">
+  <div id="topbar">
+    <div id="counter">0 scanned today</div>
+    <div id="settings-btn" onclick="openSettings()">⚙</div>
+  </div>
+  <div id="frame-guide">
+    <div class="corner-br"></div>
+    <div class="corner-bl"></div>
+    <div id="scan-line"></div>
+  </div>
+  <div id="bottom">
+    <div id="hint">Point at badge · tap to scan</div>
+    <button id="scan-btn" onclick="scan()" disabled></button>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="result-card" class="sheet" onclick="if(event.target===this)closeResult()">
+  <div class="sheet-inner">
+    <div class="sheet-label"><span class="dot" id="status-dot"></span><span id="status-label">Saved</span></div>
+    <div id="result-name"></div>
+    <div id="result-company"></div>
+    <div id="error-msg"></div>
+    <button class="btn-ghost" onclick="closeResult()">Scan next badge</button>
+  </div>
+</div>
+
+<!-- Settings -->
+<div id="settings-drawer" class="sheet" onclick="if(event.target===this)closeSettings()">
+  <div class="sheet-inner">
+    <div class="sheet-label">Settings</div>
+    <label class="field-label">Gemini API Key</label>
+    <input class="field-input" id="input-gemini" type="password" placeholder="AIza..." />
+    <label class="field-label">n8n Webhook URL</label>
+    <input class="field-input" id="input-webhook" type="text" placeholder="https://n8n.your-domain.com/webhook/badge-scan" />
+    <div class="row">
+      <button class="btn-primary" onclick="saveSettings()">Save</button>
+      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+    </div>
+    <button class="btn-danger" onclick="clearCount()">Clear today's count</button>
+  </div>
+</div>
+
+<div id="no-camera">
+  <strong>Camera access required</strong>
+  <p>Please allow camera access in your browser settings and refresh the page.</p>
+</div>
+
+<script>
+  const GEMINI_KEY_STORE = 'bs_gemini_key';
+  const WEBHOOK_STORE    = 'bs_webhook_url';
+  const COUNT_STORE      = 'bs_count_' + new Date().toDateString();
+
+  const getGeminiKey = () => localStorage.getItem(GEMINI_KEY_STORE) || '';
+  const getWebhook   = () => localStorage.getItem(WEBHOOK_STORE) || '';
+  const getCount     = () => parseInt(localStorage.getItem(COUNT_STORE) || '0');
+  const incCount     = () => { localStorage.setItem(COUNT_STORE, getCount() + 1); updateCounter(); };
+  const updateCounter = () => { document.getElementById('counter').textContent = getCount() + ' scanned today'; };
+
+  updateCounter();
+
+  const video  = document.getElementById('viewfinder');
+  const canvas = document.getElementById('canvas');
+  const btn    = document.getElementById('scan-btn');
+
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      video.srcObject = stream;
+      video.onplaying = () => { btn.disabled = false; };
+    } catch (e) {
+      document.getElementById('no-camera').classList.add('show');
+    }
+  }
+  startCamera();
+
+  async function scan() {
+    const geminiKey = getGeminiKey();
+    const webhook   = getWebhook();
+    if (!geminiKey || !webhook) { openSettings(); return; }
+
+    // Capture frame
+    const W = 800;
+    canvas.width  = W;
+    canvas.height = Math.round(W * video.videoHeight / video.videoWidth);
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const base64 = canvas.toDataURL('image/jpeg', 0.6).split(',')[1];
+
+    if (!base64 || base64.length < 1000) { showError('Capture failed. Try again.'); return; }
+
+    btn.disabled = true;
+    btn.classList.add('loading');
+    document.getElementById('scan-line').classList.add('active');
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [
+              { inline_data: { mime_type: 'image/jpeg', data: base64 } },
+              { text: 'Return JSON only, no markdown: {"first_name":"","last_name":"","company":""}. Extract from badge. Null if missing.' }
+            ]}],
+            generationConfig: { thinkingConfig: { thinkingBudget: 0 } }
+          })
+        }
+      );
+
+      const data = await res.json();
+      const raw  = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      let parsed;
+      try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+      catch { throw new Error('Could not read badge. Try again.'); }
+
+      const name    = [parsed.first_name, parsed.last_name].filter(Boolean).join(' ') || 'Unknown';
+      const company = parsed.company || '';
+
+      // Fire-and-forget to n8n
+      fetch(webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company })
+      }).catch(() => {});
+
+      incCount();
+      showResult(name, company);
+
+    } catch (err) {
+      showError(err.message || 'Something went wrong.');
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      document.getElementById('scan-line').classList.remove('active');
+    }
+  }
+
+  function showResult(name, company) {
+    document.getElementById('status-dot').className = 'dot';
+    document.getElementById('status-label').textContent = 'Saved ✓';
+    document.getElementById('result-name').textContent = name;
+    document.getElementById('result-company').textContent = company;
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('result-card').classList.add('show');
+    setTimeout(closeResult, 3000);
+  }
+
+  function showError(msg) {
+    document.getElementById('status-dot').className = 'dot err';
+    document.getElementById('status-label').textContent = 'Error';
+    document.getElementById('result-name').textContent = '';
+    document.getElementById('result-company').textContent = '';
+    const el = document.getElementById('error-msg');
+    el.style.display = 'block';
+    el.textContent = msg;
+    document.getElementById('result-card').classList.add('show');
+  }
+
+  function closeResult()  { document.getElementById('result-card').classList.remove('show'); }
+  function openSettings() {
+    document.getElementById('input-gemini').value = getGeminiKey();
+    document.getElementById('input-webhook').value = getWebhook();
+    document.getElementById('settings-drawer').classList.add('show');
+  }
+  function closeSettings() { document.getElementById('settings-drawer').classList.remove('show'); }
+  function saveSettings() {
+    localStorage.setItem(GEMINI_KEY_STORE, document.getElementById('input-gemini').value.trim());
+    localStorage.setItem(WEBHOOK_STORE,    document.getElementById('input-webhook').value.trim());
+    closeSettings();
+  }
+  function clearCount() { localStorage.setItem(COUNT_STORE, '0'); updateCounter(); }
+</script>
+</body>
+</html>
