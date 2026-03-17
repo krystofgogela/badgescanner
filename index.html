@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scanner">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Badge Scanner</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600&display=swap');
@@ -30,7 +36,7 @@
     flex-direction: column;
   }
 
-  /* CONFIG PANEL */
+  /* CONFIG */
   #config {
     position: fixed;
     inset: 0;
@@ -91,6 +97,62 @@
     width: 100%;
   }
 
+  /* INSTALL BANNER */
+  #install-banner {
+    position: fixed;
+    bottom: 24px;
+    left: 16px; right: 16px;
+    background: var(--surface);
+    border: 1px solid var(--green);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  #install-banner.show { display: flex; }
+
+  #install-banner p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  #install-banner p span {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  #install-btn {
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  #install-dismiss {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
   /* MAIN APP */
   #app {
     display: none;
@@ -99,7 +161,6 @@
     position: relative;
   }
 
-  /* HEADER */
   #header {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -135,7 +196,6 @@
     font-size: 16px;
   }
 
-  /* VIEWFINDER */
   #viewfinder {
     flex: 1;
     position: relative;
@@ -143,16 +203,10 @@
     background: #000;
   }
 
-  #video {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
+  #video { width: 100%; height: 100%; object-fit: cover; display: block; }
   #canvas { display: none; }
   #motion-canvas { display: none; }
 
-  /* SCAN FRAME — color changes with state */
   .scan-frame {
     position: absolute;
     top: 50%; left: 50%;
@@ -161,7 +215,6 @@
     max-width: 320px;
     aspect-ratio: 16/9;
     pointer-events: none;
-    transition: --frame-color 0.3s;
   }
 
   .scan-frame::before, .scan-frame::after,
@@ -187,7 +240,6 @@
   .scan-frame span::before { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
   .scan-frame span::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
 
-  /* SCAN LINE — only shows when locked */
   .scan-line {
     position: absolute;
     left: 0; right: 0;
@@ -202,11 +254,8 @@
     animation: scan 1s ease-in-out infinite;
   }
 
-  @keyframes scan {
-    0% { top: 0; } 100% { top: 100%; }
-  }
+  @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-  /* BOTTOM CONTROLS */
   #controls {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -230,12 +279,9 @@
 
   #status-text.detecting { color: var(--yellow); }
   #status-text.locked { color: var(--green); }
-  #status-text.scanning { color: var(--green); }
 
-  /* STABILITY BAR */
   #stability-bar-wrap {
-    width: 120px;
-    height: 3px;
+    width: 120px; height: 3px;
     background: rgba(255,255,255,0.1);
     border-radius: 2px;
     overflow: hidden;
@@ -246,14 +292,12 @@
   #stability-bar-wrap.show { opacity: 1; }
 
   #stability-bar {
-    height: 100%;
-    width: 0%;
+    height: 100%; width: 0%;
     background: var(--green);
     border-radius: 2px;
-    transition: width 0.1s linear, background 0.3s;
+    transition: width 0.1s linear;
   }
 
-  /* MANUAL SCAN BUTTON */
   #scan-btn {
     width: 64px; height: 64px;
     border-radius: 50%;
@@ -278,7 +322,6 @@
     color: #000;
   }
 
-  /* RESULT OVERLAY */
   #result-overlay {
     position: absolute;
     inset: 0;
@@ -333,7 +376,6 @@
     cursor: pointer;
   }
 
-  /* SAVING INDICATOR */
   #saving-indicator {
     position: absolute;
     top: 72px; left: 50%;
@@ -370,6 +412,13 @@
     <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
   </div>
   <button id="config-save">Start Scanning</button>
+</div>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <p>Install Badge Scanner <span>Add to home screen for offline access</span></p>
+  <button id="install-btn">Install</button>
+  <button id="install-dismiss">✕</button>
 </div>
 
 <!-- APP -->
@@ -409,9 +458,41 @@
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────
-const LS = { get: k => localStorage.getItem(k)||'', set: (k,v) => localStorage.setItem(k,v) };
+// ── SERVICE WORKER ───────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/badgescanner/sw.js')
+      .catch(e => console.log('SW registration failed:', e));
+  });
+}
 
+// ── PWA INSTALL PROMPT ───────────────────────────────────────
+let deferredPrompt;
+const installBanner = document.getElementById('install-banner');
+const installBtn = document.getElementById('install-btn');
+const installDismiss = document.getElementById('install-dismiss');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBanner.classList.add('show');
+});
+
+installBtn.addEventListener('click', async () => {
+  installBanner.classList.remove('show');
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  }
+});
+
+installDismiss.addEventListener('click', () => installBanner.classList.remove('show'));
+
+window.addEventListener('appinstalled', () => installBanner.classList.remove('show'));
+
+// ── CONFIG ───────────────────────────────────────────────────
+const LS = { get: k => localStorage.getItem(k)||'', set: (k,v) => localStorage.setItem(k,v) };
 const configEl = document.getElementById('config');
 const appEl = document.getElementById('app');
 
@@ -438,14 +519,14 @@ function showApp() {
   startCamera();
 }
 
-// ── COUNTER ─────────────────────────────────────────────────
+// ── COUNTER ──────────────────────────────────────────────────
 const counterEl = document.getElementById('counter');
 let count = parseInt(LS.get('scan_count')||'0');
 function updateCounter() { counterEl.textContent = `${count} scanned`; }
 function incrementCounter() { count++; LS.set('scan_count', count); updateCounter(); }
 updateCounter();
 
-// ── CAMERA ──────────────────────────────────────────────────
+// ── CAMERA ───────────────────────────────────────────────────
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const motionCanvas = document.getElementById('motion-canvas');
@@ -475,29 +556,22 @@ const statusText = document.getElementById('status-text');
 const stabilityBarWrap = document.getElementById('stability-bar-wrap');
 const stabilityBar = document.getElementById('stability-bar');
 
-const MOTION_THRESHOLD = 25;     // pixel diff to count as motion
-const STABLE_FRAMES_NEEDED = 12; // frames stable before auto-scan (~0.8s at 15fps)
-const MOTION_CHECK_INTERVAL = 55; // ms between checks
+const MOTION_THRESHOLD = 25;
+const STABLE_FRAMES_NEEDED = 12;
+const MOTION_CHECK_INTERVAL = 55;
 
 let prevImageData = null;
 let stableFrames = 0;
 let motionInterval = null;
 let isScanning = false;
-let hasContent = false;
 
 function getMotionScore() {
   const ctx = motionCanvas.getContext('2d');
   ctx.drawImage(video, 0, 0, 160, 90);
   const current = ctx.getImageData(0, 0, 160, 90);
-
-  if (!prevImageData) {
-    prevImageData = current;
-    return 999;
-  }
-
+  if (!prevImageData) { prevImageData = current; return 999; }
   let diff = 0;
-  const len = current.data.length;
-  for (let i = 0; i < len; i += 4) {
+  for (let i = 0; i < current.data.length; i += 4) {
     diff += Math.abs(current.data[i] - prevImageData.data[i]);
   }
   prevImageData = current;
@@ -508,19 +582,16 @@ function getBrightness() {
   const ctx = motionCanvas.getContext('2d');
   const data = ctx.getImageData(0, 0, 160, 90).data;
   let total = 0;
-  for (let i = 0; i < data.length; i += 4) {
-    total += (data[i] + data[i+1] + data[i+2]) / 3;
-  }
+  for (let i = 0; i < data.length; i += 4) total += (data[i]+data[i+1]+data[i+2])/3;
   return total / (160 * 90);
 }
 
 function startMotionDetection() {
   motionInterval = setInterval(() => {
     if (isScanning) return;
-
     const motion = getMotionScore();
     const brightness = getBrightness();
-    hasContent = brightness > 20 && brightness < 240;
+    const hasContent = brightness > 20 && brightness < 240;
 
     if (!hasContent) {
       setFrameState('idle', 'Point camera at badge', 0);
@@ -529,14 +600,11 @@ function startMotionDetection() {
     }
 
     if (motion > MOTION_THRESHOLD) {
-      // Moving
       stableFrames = Math.max(0, stableFrames - 2);
       setFrameState('detecting', 'Hold steady...', stableFrames / STABLE_FRAMES_NEEDED * 100);
     } else {
-      // Stable
       stableFrames = Math.min(STABLE_FRAMES_NEEDED, stableFrames + 1);
       const progress = stableFrames / STABLE_FRAMES_NEEDED * 100;
-      
       if (stableFrames >= STABLE_FRAMES_NEEDED) {
         setFrameState('locked', 'Scanning...', 100);
         triggerScan();
@@ -556,7 +624,6 @@ function setFrameState(state, text, progress) {
   statusText.className = state;
   statusText.textContent = text;
   stabilityBar.style.width = `${progress}%`;
-  
   if (state === 'idle') {
     stabilityBarWrap.classList.remove('show');
     scanBtn.classList.remove('active');
@@ -567,7 +634,7 @@ function setFrameState(state, text, progress) {
   }
 }
 
-// ── CAPTURE ─────────────────────────────────────────────────
+// ── CAPTURE ──────────────────────────────────────────────────
 function captureFrame() {
   const MAX_W = 800;
   let w = video.videoWidth, h = video.videoHeight;
@@ -577,7 +644,7 @@ function captureFrame() {
   return canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
 }
 
-// ── GEMINI ──────────────────────────────────────────────────
+// ── GEMINI ───────────────────────────────────────────────────
 async function callGemini(base64Image) {
   const key = LS.get('gemini_key');
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`;
@@ -591,11 +658,10 @@ async function callGemini(base64Image) {
   const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
   if (!res.ok) throw new Error(`Gemini ${res.status}`);
   const data = await res.json();
-  const raw = data.candidates[0].content.parts[0].text;
-  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  return JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());
 }
 
-// ── N8N BACKGROUND SAVE ─────────────────────────────────────
+// ── N8N SAVE ─────────────────────────────────────────────────
 function saveToExcel(parsed) {
   const url = LS.get('webhook_url');
   if (!url) return;
@@ -608,12 +674,11 @@ function saveToExcel(parsed) {
   }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
 }
 
-// ── SCAN ────────────────────────────────────────────────────
+// ── SCAN ─────────────────────────────────────────────────────
 async function triggerScan() {
   if (isScanning) return;
   isScanning = true;
   stableFrames = 0;
-
   try {
     const image = captureFrame();
     if (!image || image.length < 1000) { showError('Capture failed. Try again.'); return; }
@@ -626,13 +691,12 @@ async function triggerScan() {
   }
 }
 
-// Manual tap fallback
 scanBtn.addEventListener('click', () => {
   if (isScanning || scanBtn.disabled) return;
   triggerScan();
 });
 
-// ── RESULT UI ───────────────────────────────────────────────
+// ── RESULT UI ────────────────────────────────────────────────
 const overlay = document.getElementById('result-overlay');
 const card = document.getElementById('result-card');
 
@@ -662,15 +726,11 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   prevImageData = null;
 });
 
-// ── INIT ────────────────────────────────────────────────────
+// ── INIT ─────────────────────────────────────────────────────
 document.getElementById('gemini-key').value = LS.get('gemini_key');
 document.getElementById('webhook-url').value = LS.get('webhook_url');
-
-if (LS.get('gemini_key') && LS.get('webhook_url')) {
-  showApp();
-} else {
-  configEl.style.display = 'flex';
-}
+if (LS.get('gemini_key') && LS.get('webhook_url')) showApp();
+else configEl.style.display = 'flex';
 </script>
 </body>
 </html>
