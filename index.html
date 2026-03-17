@@ -226,7 +226,7 @@ const LS={get:k=>localStorage.getItem(k)||'',set:(k,v)=>localStorage.setItem(k,v
 
 // ── HARDCODED CONFIG ─────────────────────────────────────────
 const CFG={
-  gemini_key:'AIzaSyDA6YrfimPHXx5BGq5stPAIKe6mWGBCyjM',
+  gemini_key:'',
   webhook_url:'https://n8n.pfm-intelligence.com/webhook/0bb1992e-a610-4401-af63-402efd4d51f4',
   label_day1:'22 April',
   sheet_day1:'{00000000-0001-0000-0000-000000000000}',
@@ -496,8 +496,8 @@ function resetOverlay(){
   isScanning=false;prevImageData=null;
 }
 
-// ── INIT — go straight to scanner ────────────────────────────
-startApp();
+// ── INIT — go straight to scanner if key exists ──────────────
+if(LS.get('gemini_key')){startApp();}else{openConfig();}
 </script>
 </body>
 </html>
