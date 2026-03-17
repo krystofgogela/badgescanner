@@ -113,7 +113,6 @@
   }
 
   #install-banner.show { display: flex; }
-
   #install-banner p { font-size: 13px; color: var(--text); line-height: 1.4; flex: 1; }
   #install-banner p span { display: block; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
 
@@ -174,6 +173,43 @@
     font-size: 16px;
   }
 
+  /* DAY TOGGLE */
+  #day-toggle {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 4px;
+    display: flex;
+    gap: 2px;
+  }
+
+  .day-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .day-btn.active {
+    background: var(--green);
+    color: #000;
+    font-weight: 600;
+  }
+
   #viewfinder {
     flex: 1;
     position: relative;
@@ -188,7 +224,7 @@
   .scan-frame {
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%, -60%);
+    transform: translate(-50%, -55%);
     width: 75vw;
     max-width: 320px;
     aspect-ratio: 16/9;
@@ -226,7 +262,6 @@
   }
 
   .scan-frame.locked .scan-line { opacity: 0.8; animation: scan 1s ease-in-out infinite; }
-
   @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
   #controls {
@@ -351,7 +386,7 @@
 
   #saving-indicator {
     position: absolute;
-    top: 72px; left: 50%;
+    top: 20px; left: 50%;
     transform: translateX(-50%);
     background: rgba(0,0,0,0.8);
     border: 1px solid var(--border);
@@ -383,6 +418,14 @@
     <label>n8n Webhook URL</label>
     <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
   </div>
+  <div class="field">
+    <label>Day 1 Sheet Name</label>
+    <input type="text" id="sheet-day1" placeholder="e.g. Day 1 or 22.4." autocomplete="off">
+  </div>
+  <div class="field">
+    <label>Day 2 Sheet Name</label>
+    <input type="text" id="sheet-day2" placeholder="e.g. Day 2 or 23.4." autocomplete="off">
+  </div>
   <button id="config-save">Start Scanning</button>
 </div>
 
@@ -396,6 +439,12 @@
   <div id="header">
     <div id="counter">0 scanned</div>
     <div id="settings-btn">⚙</div>
+  </div>
+
+  <!-- DAY TOGGLE -->
+  <div id="day-toggle">
+    <button class="day-btn active" id="btn-day1">Day 1</button>
+    <button class="day-btn" id="btn-day2">Day 2</button>
   </div>
 
   <div id="viewfinder">
@@ -459,9 +508,13 @@ const appEl = document.getElementById('app');
 document.getElementById('config-save').addEventListener('click', () => {
   const key = document.getElementById('gemini-key').value.trim();
   const url = document.getElementById('webhook-url').value.trim();
-  if (!key || !url) { alert('Both fields are required.'); return; }
+  const day1 = document.getElementById('sheet-day1').value.trim();
+  const day2 = document.getElementById('sheet-day2').value.trim();
+  if (!key || !url || !day1 || !day2) { alert('All fields are required.'); return; }
   LS.set('gemini_key', key);
   LS.set('webhook_url', url);
+  LS.set('sheet_day1', day1);
+  LS.set('sheet_day2', day2);
   showApp();
 });
 
@@ -469,6 +522,8 @@ document.getElementById('settings-btn').addEventListener('click', () => {
   stopMotionDetection();
   document.getElementById('gemini-key').value = LS.get('gemini_key');
   document.getElementById('webhook-url').value = LS.get('webhook_url');
+  document.getElementById('sheet-day1').value = LS.get('sheet_day1');
+  document.getElementById('sheet-day2').value = LS.get('sheet_day2');
   configEl.style.display = 'flex';
   appEl.style.display = 'none';
 });
@@ -476,7 +531,34 @@ document.getElementById('settings-btn').addEventListener('click', () => {
 function showApp() {
   configEl.style.display = 'none';
   appEl.style.display = 'flex';
+  updateDayToggleLabels();
   startCamera();
+}
+
+// ── DAY TOGGLE ───────────────────────────────────────────────
+let activeDay = parseInt(LS.get('active_day') || '1');
+
+const btnDay1 = document.getElementById('btn-day1');
+const btnDay2 = document.getElementById('btn-day2');
+
+function updateDayToggleLabels() {
+  btnDay1.textContent = LS.get('sheet_day1') || 'Day 1';
+  btnDay2.textContent = LS.get('sheet_day2') || 'Day 2';
+  setActiveDay(activeDay, false);
+}
+
+function setActiveDay(day, save = true) {
+  activeDay = day;
+  if (save) LS.set('active_day', day);
+  btnDay1.classList.toggle('active', day === 1);
+  btnDay2.classList.toggle('active', day === 2);
+}
+
+btnDay1.addEventListener('click', () => setActiveDay(1));
+btnDay2.addEventListener('click', () => setActiveDay(2));
+
+function getActiveSheet() {
+  return activeDay === 1 ? LS.get('sheet_day1') : LS.get('sheet_day2');
 }
 
 // ── COUNTER ──────────────────────────────────────────────────
@@ -516,11 +598,10 @@ const statusText = document.getElementById('status-text');
 const stabilityBarWrap = document.getElementById('stability-bar-wrap');
 const stabilityBar = document.getElementById('stability-bar');
 
-// Tunable constants
-const MOTION_THRESHOLD = 20;      // max pixel diff to count as "still"
-const STABLE_FRAMES_NEEDED = 14;  // frames still needed before scan (~0.8s)
-const CONTRAST_THRESHOLD = 35;    // min stdDev to count as badge-like content
-const MOTION_CHECK_INTERVAL = 55; // ms between checks
+const MOTION_THRESHOLD = 20;
+const STABLE_FRAMES_NEEDED = 14;
+const CONTRAST_THRESHOLD = 35;
+const MOTION_CHECK_INTERVAL = 55;
 
 let prevImageData = null;
 let stableFrames = 0;
@@ -533,7 +614,6 @@ function getFrameStats() {
   const current = ctx.getImageData(0, 0, 160, 90);
   const pixels = current.data;
 
-  // Contrast (stdDev of brightness)
   let sum = 0, sumSq = 0, count = 0;
   for (let i = 0; i < pixels.length; i += 4) {
     const b = (pixels[i] + pixels[i+1] + pixels[i+2]) / 3;
@@ -542,7 +622,6 @@ function getFrameStats() {
   const mean = sum / count;
   const stdDev = Math.sqrt((sumSq / count) - (mean * mean));
 
-  // Motion (diff from previous frame)
   let motion = 0;
   if (prevImageData) {
     for (let i = 0; i < pixels.length; i += 4) {
@@ -560,26 +639,21 @@ function getFrameStats() {
 function startMotionDetection() {
   motionInterval = setInterval(() => {
     if (isScanning) return;
-
     const { stdDev, motion } = getFrameStats();
     const looksLikeBadge = stdDev > CONTRAST_THRESHOLD;
 
     if (!looksLikeBadge) {
-      // Nothing interesting in frame — reset silently
       stableFrames = 0;
       setFrameState('idle', 'Point camera at badge', 0);
       return;
     }
 
     if (motion > MOTION_THRESHOLD) {
-      // Badge detected but moving
       stableFrames = Math.max(0, stableFrames - 2);
       setFrameState('detecting', 'Hold steady...', stableFrames / STABLE_FRAMES_NEEDED * 100);
     } else {
-      // Badge detected and still
       stableFrames = Math.min(STABLE_FRAMES_NEEDED, stableFrames + 1);
       const progress = stableFrames / STABLE_FRAMES_NEEDED * 100;
-
       if (stableFrames >= STABLE_FRAMES_NEEDED) {
         setFrameState('locked', 'Scanning...', 100);
         triggerScan();
@@ -645,7 +719,12 @@ function saveToExcel(parsed) {
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company })
+    body: JSON.stringify({
+      first_name: parsed.first_name,
+      last_name: parsed.last_name,
+      company: parsed.company,
+      sheet: getActiveSheet()   // ← sends sheet name to n8n
+    })
   }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
 }
 
@@ -666,7 +745,6 @@ async function triggerScan() {
   }
 }
 
-// Manual tap fallback
 scanBtn.addEventListener('click', () => {
   if (isScanning || scanBtn.disabled) return;
   triggerScan();
@@ -678,7 +756,7 @@ const card = document.getElementById('result-card');
 
 function showSuccess(data) {
   card.className = 'result-card success';
-  document.getElementById('result-status').textContent = '✓ Badge captured';
+  document.getElementById('result-status').textContent = `✓ Saved to ${getActiveSheet()}`;
   document.getElementById('result-name').textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || '—';
   document.getElementById('result-company').textContent = data.company || '—';
   document.getElementById('result-message').textContent = '';
@@ -705,7 +783,11 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 // ── INIT ─────────────────────────────────────────────────────
 document.getElementById('gemini-key').value = LS.get('gemini_key');
 document.getElementById('webhook-url').value = LS.get('webhook_url');
-if (LS.get('gemini_key') && LS.get('webhook_url')) showApp();
+document.getElementById('sheet-day1').value = LS.get('sheet_day1');
+document.getElementById('sheet-day2').value = LS.get('sheet_day2');
+
+const allSet = LS.get('gemini_key') && LS.get('webhook_url') && LS.get('sheet_day1') && LS.get('sheet_day2');
+if (allSet) showApp();
 else configEl.style.display = 'flex';
 </script>
 </body>
