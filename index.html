@@ -17,7 +17,6 @@
     --red: #F04438;
     --red-dark: #D92D20;
     --red-light: #FDA29B;
-    --purple: #9E77ED;
     --bg: #0C111D;
     --bg-2: #161B2C;
     --bg-3: #1E2536;
@@ -41,13 +40,9 @@
 
   /* ── CONFIG ──────────────────────────────────────────── */
   #config {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
+    position: fixed; inset: 0;
+    background: var(--bg); z-index: 100;
+    display: flex; flex-direction: column;
     overflow-y: auto;
   }
 
@@ -57,143 +52,59 @@
     background: var(--bg-2);
   }
 
-  .config-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
+  .config-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
 
   .config-logo-mark {
-    width: 32px;
-    height: 32px;
-    background: var(--red);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.5px;
+    width: 32px; height: 32px;
+    background: var(--red); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: white; letter-spacing: -0.5px;
   }
 
-  .config-logo-text {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--text);
-  }
+  .config-logo-text { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+  .config-logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+  .config-header h2 { font-size: 24px; font-weight: 700; line-height: 1.2; }
+  .config-header p { margin-top: 6px; font-size: 14px; color: var(--muted-light); line-height: 1.5; }
 
-  .config-logo-sub {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .config-header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text);
-  }
-
-  .config-header p {
-    margin-top: 6px;
-    font-size: 14px;
-    color: var(--muted-light);
-    line-height: 1.5;
-  }
-
-  .config-body {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-  }
+  .config-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; flex: 1; }
 
   .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--red);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    margin-top: 4px;
+    font-size: 11px; font-weight: 600; color: var(--red);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-top: 4px;
   }
 
   .field { display: flex; flex-direction: column; gap: 6px; }
 
-  .field label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--muted-light);
-    letter-spacing: 0.02em;
-  }
+  .field label { font-size: 12px; font-weight: 500; color: var(--muted-light); letter-spacing: 0.02em; }
 
   .field input {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: 'Instrument Sans', Helvetica, sans-serif;
-    font-size: 14px;
-    outline: none;
-    width: 100%;
-    transition: border-color 0.2s;
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+    color: var(--text); font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 14px; outline: none; width: 100%; transition: border-color 0.2s;
   }
 
   .field input:focus { border-color: var(--red); }
   .field input::placeholder { color: var(--muted); }
 
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1.6fr;
-    gap: 10px;
-  }
+  .field-row { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
 
   #config-save {
-    background: var(--red);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 16px;
-    font-family: 'Instrument Sans', Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: background 0.2s;
-    margin-top: 4px;
+    background: var(--red); color: #fff; border: none; border-radius: 8px;
+    padding: 16px; font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 4px;
   }
 
   #config-save:active { background: var(--red-dark); }
-
-  .tagline {
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    letter-spacing: 0.05em;
-    padding-bottom: 8px;
-  }
+  .tagline { font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.05em; padding-bottom: 8px; }
 
   /* ── INSTALL BANNER ──────────────────────────────────── */
   #install-banner {
-    position: fixed;
-    bottom: 24px; left: 16px; right: 16px;
-    background: var(--bg-2);
-    border: 1px solid var(--red);
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    z-index: 200;
+    position: fixed; bottom: 24px; left: 16px; right: 16px;
+    background: var(--bg-2); border: 1px solid var(--red); border-radius: 12px;
+    padding: 16px 20px; display: none; align-items: center;
+    justify-content: space-between; gap: 12px; z-index: 200;
     box-shadow: 0 8px 32px rgba(240,68,56,0.15);
   }
 
@@ -206,159 +117,82 @@
   /* ── MAIN APP ────────────────────────────────────────── */
   #app { display: none; flex-direction: column; height: 100dvh; position: relative; }
 
-  /* ── HEADER ─────────────────────────────────────────── */
   #header {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 0;
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 0;
   }
 
   #header-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(12,17,29,0.75);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px 6px 8px;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(12,17,29,0.75); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px 6px 8px;
   }
 
   .header-logo-mark {
-    width: 22px; height: 22px;
-    background: var(--red);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: white;
+    width: 22px; height: 22px; background: var(--red); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white;
   }
 
-  .header-logo-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-
-  #header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .header-logo-name { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; }
+  #header-right { display: flex; align-items: center; gap: 8px; }
 
   #counter {
-    background: rgba(12,17,29,0.75);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--red-light);
+    background: rgba(12,17,29,0.75); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px;
+    font-size: 12px; font-weight: 500; color: var(--red-light);
   }
 
   #settings-btn {
-    background: rgba(12,17,29,0.75);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    width: 34px; height: 34px;
-    display: flex; align-items: center; justify-content: center;
+    background: rgba(12,17,29,0.75); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 20px;
+    width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--muted); font-size: 15px;
   }
 
-  /* ── DAY TOGGLE ─────────────────────────────────────── */
   #day-toggle {
-    position: absolute;
-    top: 64px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    background: rgba(12,17,29,0.8);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 3px;
-    display: flex;
-    gap: 2px;
+    position: absolute; top: 64px; left: 50%; transform: translateX(-50%);
+    z-index: 10; background: rgba(12,17,29,0.8); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 24px; padding: 3px; display: flex; gap: 2px;
   }
 
   .day-btn {
-    font-family: 'Instrument Sans', Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 6px 18px;
-    border-radius: 20px;
-    border: none;
-    background: transparent;
-    color: var(--muted-light);
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
+    font-family: 'Instrument Sans', Helvetica, sans-serif; font-size: 12px; font-weight: 500;
+    padding: 6px 18px; border-radius: 20px; border: none; background: transparent;
+    color: var(--muted-light); cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
 
-  .day-btn.active {
-    background: var(--red);
-    color: #fff;
-    font-weight: 600;
-  }
+  .day-btn.active { background: var(--red); color: #fff; font-weight: 600; }
 
-  /* ── VIEWFINDER ──────────────────────────────────────── */
   #viewfinder { flex: 1; position: relative; overflow: hidden; background: #000; }
   #video { width: 100%; height: 100%; object-fit: cover; display: block; }
   #canvas { display: none; }
   #motion-canvas { display: none; }
 
-  /* Subtle vignette overlay */
   #viewfinder::after {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse at center, transparent 40%, rgba(12,17,29,0.5) 100%);
     pointer-events: none;
   }
 
-  /* ── SCAN FRAME ─────────────────────────────────────── */
   .scan-frame {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -55%);
-    width: 75vw;
-    max-width: 320px;
-    aspect-ratio: 16/9;
-    pointer-events: none;
-    z-index: 2;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -55%); width: 75vw; max-width: 320px;
+    aspect-ratio: 16/9; pointer-events: none; z-index: 2;
   }
 
   .scan-frame::before, .scan-frame::after,
   .scan-frame span::before, .scan-frame span::after {
-    content: ''; position: absolute;
-    width: 22px; height: 22px;
-    border-style: solid;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    content: ''; position: absolute; width: 22px; height: 22px;
+    border-style: solid; transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   .scan-frame.idle::before, .scan-frame.idle::after,
-  .scan-frame.idle span::before, .scan-frame.idle span::after {
-    border-color: rgba(255,255,255,0.25);
-  }
-
+  .scan-frame.idle span::before, .scan-frame.idle span::after { border-color: rgba(255,255,255,0.25); }
   .scan-frame.detecting::before, .scan-frame.detecting::after,
-  .scan-frame.detecting span::before, .scan-frame.detecting span::after {
-    border-color: #F79009;
-  }
-
+  .scan-frame.detecting span::before, .scan-frame.detecting span::after { border-color: #F79009; }
   .scan-frame.locked::before, .scan-frame.locked::after,
-  .scan-frame.locked span::before, .scan-frame.locked span::after {
-    border-color: var(--red);
-    box-shadow: 0 0 8px rgba(240,68,56,0.6);
-  }
+  .scan-frame.locked span::before, .scan-frame.locked span::after { border-color: var(--red); box-shadow: 0 0 8px rgba(240,68,56,0.6); }
 
   .scan-frame::before { top: 0; left: 0; border-width: 2px 0 0 2px; }
   .scan-frame::after { top: 0; right: 0; border-width: 2px 2px 0 0; }
@@ -374,171 +208,141 @@
   .scan-frame.locked .scan-line { opacity: 1; animation: scan 1s ease-in-out infinite; }
   @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-  /* ── CONTROLS ───────────────────────────────────────── */
   #controls {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
     padding: 20px 24px 36px;
     background: linear-gradient(transparent, rgba(12,17,29,0.92));
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 2;
   }
 
   #status-text {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
-    transition: color 0.3s;
-    height: 16px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.35); transition: color 0.3s; height: 16px;
   }
 
   #status-text.detecting { color: #F79009; }
   #status-text.locked { color: var(--red-light); }
 
   #stability-bar-wrap {
-    width: 100px; height: 2px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px; overflow: hidden;
-    opacity: 0; transition: opacity 0.3s;
+    width: 100px; height: 2px; background: rgba(255,255,255,0.08);
+    border-radius: 2px; overflow: hidden; opacity: 0; transition: opacity 0.3s;
   }
 
   #stability-bar-wrap.show { opacity: 1; }
-
-  #stability-bar {
-    height: 100%; width: 0%;
-    background: var(--red);
-    border-radius: 2px;
-    transition: width 0.1s linear;
-  }
+  #stability-bar { height: 100%; width: 0%; background: var(--red); border-radius: 2px; transition: width 0.1s linear; }
 
   #scan-btn {
-    width: 66px; height: 66px;
-    border-radius: 50%;
-    background: rgba(240,68,56,0.12);
-    border: 1.5px solid rgba(240,68,56,0.3);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-    color: rgba(255,255,255,0.5);
-    font-size: 11px;
-    font-family: 'Instrument Sans', Helvetica, sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    width: 66px; height: 66px; border-radius: 50%;
+    background: rgba(240,68,56,0.12); border: 1.5px solid rgba(240,68,56,0.3);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; color: rgba(255,255,255,0.5);
+    font-size: 11px; font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-weight: 600; letter-spacing: 0.08em;
   }
 
   #scan-btn:active { transform: scale(0.93); }
-  #scan-btn.active {
-    background: var(--red);
-    border-color: var(--red);
-    box-shadow: 0 0 28px rgba(240,68,56,0.45);
-    color: #fff;
-  }
+  #scan-btn.active { background: var(--red); border-color: var(--red); box-shadow: 0 0 28px rgba(240,68,56,0.45); color: #fff; }
 
   /* ── RESULT OVERLAY ─────────────────────────────────── */
   #result-overlay {
     position: absolute; inset: 0;
-    background: rgba(12,17,29,0.9);
-    backdrop-filter: blur(6px);
+    background: rgba(12,17,29,0.92); backdrop-filter: blur(6px);
     display: none; flex-direction: column;
     align-items: center; justify-content: center;
-    padding: 32px; gap: 20px; z-index: 20;
+    padding: 24px; gap: 16px; z-index: 20;
   }
 
   #result-overlay.show { display: flex; }
 
   .result-card {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    width: 100%; max-width: 360px;
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px; width: 100%; max-width: 360px;
   }
 
   .result-card.success { border-color: var(--red); }
   .result-card.error { border-color: #475467; }
 
   .result-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
   }
 
-  .result-status {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
+  .result-status { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
   .success .result-status { color: var(--red-light); }
   .error .result-status { color: var(--muted-light); }
 
   .result-day-badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(240,68,56,0.12);
-    color: var(--red-light);
-    border: 1px solid rgba(240,68,56,0.25);
-    border-radius: 12px;
-    padding: 3px 10px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    background: rgba(240,68,56,0.12); color: var(--red-light);
+    border: 1px solid rgba(240,68,56,0.25); border-radius: 12px; padding: 3px 10px;
   }
 
-  .result-divider {
-    height: 1px;
-    background: var(--border);
-    margin-bottom: 16px;
+  .result-divider { height: 1px; background: var(--border); margin-bottom: 16px; }
+
+  /* REVIEW MODE — editable fields */
+  .review-label {
+    font-size: 11px; font-weight: 500; color: var(--muted);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px;
   }
 
-  .result-name {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 4px;
-    color: var(--text);
+  .review-input {
+    background: var(--bg-3); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px;
+    color: var(--text); font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 15px; font-weight: 600; outline: none; width: 100%;
+    transition: border-color 0.2s; margin-bottom: 10px;
   }
 
-  .result-company {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted-light);
+  .review-input:focus { border-color: var(--red); }
+  .review-input::placeholder { color: var(--muted); font-weight: 400; }
+
+  .review-input.company { font-size: 13px; font-weight: 500; color: var(--muted-light); }
+
+  /* ACTION BUTTONS */
+  .result-actions {
+    display: flex; gap: 10px; width: 100%; max-width: 360px;
   }
 
-  .result-message { font-size: 14px; color: var(--muted-light); line-height: 1.5; }
-
-  #reset-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 13px 32px;
-    color: var(--muted-light);
+  .btn-secondary {
+    flex: 1; background: transparent; border: 1px solid var(--border);
+    border-radius: 8px; padding: 13px; color: var(--muted-light);
     font-family: 'Instrument Sans', Helvetica, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color 0.2s;
   }
 
-  #reset-btn:active { border-color: var(--red); color: var(--text); }
+  .btn-secondary:active { border-color: var(--muted-light); }
 
-  /* ── SAVING INDICATOR ───────────────────────────────── */
+  .btn-primary {
+    flex: 2; background: var(--red); border: none;
+    border-radius: 8px; padding: 13px; color: #fff;
+    font-family: 'Instrument Sans', Helvetica, sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+
+  .btn-primary:active { background: var(--red-dark); }
+
+  /* SAVED STATE */
+  #saved-state { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  #saved-state.show { display: flex; }
+
+  .saved-card {
+    background: var(--bg-2); border: 1px solid var(--red);
+    border-radius: 12px; padding: 20px; width: 100%; max-width: 360px;
+  }
+
+  .saved-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .saved-status { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red-light); }
+  .saved-name { font-size: 20px; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+  .saved-company { font-size: 13px; font-weight: 500; color: var(--muted-light); }
+
+  /* ERROR STATE */
+  .result-message { font-size: 14px; color: var(--muted-light); line-height: 1.5; margin-top: 8px; }
+
   #saving-indicator {
-    position: absolute; top: 20px; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(12,17,29,0.9);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--muted-light);
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none; white-space: nowrap; z-index: 30;
-    letter-spacing: 0.04em;
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(12,17,29,0.9); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 11px; font-weight: 500; color: var(--muted-light);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 30;
   }
 
   #saving-indicator.show { opacity: 1; }
@@ -559,42 +363,25 @@
     <h2>Scanner Setup</h2>
     <p>Configure your API credentials and event day sheets to get started.</p>
   </div>
-
   <div class="config-body">
     <div class="field">
       <label>Gemini API Key</label>
       <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
     </div>
-
     <div class="field">
       <label>n8n Webhook URL</label>
       <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
     </div>
-
     <div class="section-label">Day 1</div>
     <div class="field-row">
-      <div class="field">
-        <label>Display Name</label>
-        <input type="text" id="label-day1" placeholder="e.g. Day 1" autocomplete="off">
-      </div>
-      <div class="field">
-        <label>Sheet ID</label>
-        <input type="text" id="sheet-day1" placeholder="{00000000-...}" autocomplete="off">
-      </div>
+      <div class="field"><label>Display Name</label><input type="text" id="label-day1" placeholder="e.g. Day 1" autocomplete="off"></div>
+      <div class="field"><label>Sheet ID</label><input type="text" id="sheet-day1" placeholder="{00000000-...}" autocomplete="off"></div>
     </div>
-
     <div class="section-label">Day 2</div>
     <div class="field-row">
-      <div class="field">
-        <label>Display Name</label>
-        <input type="text" id="label-day2" placeholder="e.g. Day 2" autocomplete="off">
-      </div>
-      <div class="field">
-        <label>Sheet ID</label>
-        <input type="text" id="sheet-day2" placeholder="{562517FD-...}" autocomplete="off">
-      </div>
+      <div class="field"><label>Display Name</label><input type="text" id="label-day2" placeholder="e.g. Day 2" autocomplete="off"></div>
+      <div class="field"><label>Sheet ID</label><input type="text" id="sheet-day2" placeholder="{562517FD-...}" autocomplete="off"></div>
     </div>
-
     <button id="config-save">Start Scanning</button>
     <div class="tagline">Unlocking location potential</div>
   </div>
@@ -638,18 +425,58 @@
     <button id="scan-btn" disabled>TAP</button>
   </div>
 
+  <!-- RESULT OVERLAY: review/confirm/error -->
   <div id="result-overlay">
-    <div class="result-card" id="result-card">
-      <div class="result-top">
-        <div class="result-status" id="result-status"></div>
-        <div class="result-day-badge" id="result-day-badge"></div>
+
+    <!-- REVIEW STATE (default after scan) -->
+    <div id="review-state" style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">
+      <div class="result-card success">
+        <div class="result-top">
+          <div class="result-status">Review & Confirm</div>
+          <div class="result-day-badge" id="review-day-badge"></div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="review-label">Name</div>
+        <input class="review-input" id="review-name" type="text" placeholder="Full name">
+        <div class="review-label">Company</div>
+        <input class="review-input company" id="review-company" type="text" placeholder="Company">
       </div>
-      <div class="result-divider"></div>
-      <div class="result-name" id="result-name"></div>
-      <div class="result-company" id="result-company"></div>
-      <div class="result-message" id="result-message"></div>
+      <div class="result-actions">
+        <button class="btn-secondary" id="btn-discard">Discard</button>
+        <button class="btn-primary" id="btn-confirm">Save to Excel</button>
+      </div>
     </div>
-    <button id="reset-btn">Scan Another</button>
+
+    <!-- SAVED STATE -->
+    <div id="saved-state">
+      <div class="saved-card">
+        <div class="saved-top">
+          <div class="saved-status">✓ Saved</div>
+          <div class="result-day-badge" id="saved-day-badge"></div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="saved-name" id="saved-name"></div>
+        <div class="saved-company" id="saved-company"></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" id="btn-next">Scan Next</button>
+      </div>
+    </div>
+
+    <!-- ERROR STATE -->
+    <div id="error-state" style="display:none; flex-direction:column; align-items:center; gap:16px; width:100%;">
+      <div class="result-card error">
+        <div class="result-top">
+          <div class="result-status">✕ Scan Failed</div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-message" id="error-message"></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" id="btn-retry">Try Again</button>
+      </div>
+    </div>
+
   </div>
 
   <div id="saving-indicator">Saving to Excel...</div>
@@ -659,8 +486,7 @@
 // ── SERVICE WORKER ───────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/badgescanner/sw.js')
-      .catch(e => console.log('SW failed:', e));
+    navigator.serviceWorker.register('/badgescanner/sw.js').catch(e => console.log('SW failed:', e));
   });
 }
 
@@ -678,67 +504,62 @@ const configEl = document.getElementById('config');
 const appEl = document.getElementById('app');
 
 document.getElementById('config-save').addEventListener('click', () => {
-  const key    = document.getElementById('gemini-key').value.trim();
-  const url    = document.getElementById('webhook-url').value.trim();
-  const lbl1   = document.getElementById('label-day1').value.trim();
-  const sheet1 = document.getElementById('sheet-day1').value.trim();
-  const lbl2   = document.getElementById('label-day2').value.trim();
-  const sheet2 = document.getElementById('sheet-day2').value.trim();
-  if (!key || !url || !lbl1 || !sheet1 || !lbl2 || !sheet2) { alert('All fields are required.'); return; }
-  LS.set('gemini_key', key); LS.set('webhook_url', url);
-  LS.set('label_day1', lbl1); LS.set('sheet_day1', sheet1);
-  LS.set('label_day2', lbl2); LS.set('sheet_day2', sheet2);
+  const key=document.getElementById('gemini-key').value.trim();
+  const url=document.getElementById('webhook-url').value.trim();
+  const lbl1=document.getElementById('label-day1').value.trim();
+  const sheet1=document.getElementById('sheet-day1').value.trim();
+  const lbl2=document.getElementById('label-day2').value.trim();
+  const sheet2=document.getElementById('sheet-day2').value.trim();
+  if (!key||!url||!lbl1||!sheet1||!lbl2||!sheet2) { alert('All fields are required.'); return; }
+  LS.set('gemini_key',key); LS.set('webhook_url',url);
+  LS.set('label_day1',lbl1); LS.set('sheet_day1',sheet1);
+  LS.set('label_day2',lbl2); LS.set('sheet_day2',sheet2);
   showApp();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
   stopMotionDetection();
-  document.getElementById('gemini-key').value  = LS.get('gemini_key');
-  document.getElementById('webhook-url').value = LS.get('webhook_url');
-  document.getElementById('label-day1').value  = LS.get('label_day1');
-  document.getElementById('sheet-day1').value  = LS.get('sheet_day1');
-  document.getElementById('label-day2').value  = LS.get('label_day2');
-  document.getElementById('sheet-day2').value  = LS.get('sheet_day2');
-  configEl.style.display = 'flex';
-  appEl.style.display = 'none';
+  document.getElementById('gemini-key').value=LS.get('gemini_key');
+  document.getElementById('webhook-url').value=LS.get('webhook_url');
+  document.getElementById('label-day1').value=LS.get('label_day1');
+  document.getElementById('sheet-day1').value=LS.get('sheet_day1');
+  document.getElementById('label-day2').value=LS.get('label_day2');
+  document.getElementById('sheet-day2').value=LS.get('sheet_day2');
+  configEl.style.display='flex'; appEl.style.display='none';
 });
 
 function showApp() {
-  configEl.style.display = 'none';
-  appEl.style.display = 'flex';
-  updateDayToggleLabels();
-  startCamera();
+  configEl.style.display='none'; appEl.style.display='flex';
+  updateDayToggleLabels(); startCamera();
 }
 
 // ── DAY TOGGLE ───────────────────────────────────────────────
-let activeDay = parseInt(LS.get('active_day') || '1');
+let activeDay = parseInt(LS.get('active_day')||'1');
 const btnDay1 = document.getElementById('btn-day1');
 const btnDay2 = document.getElementById('btn-day2');
 
 function updateDayToggleLabels() {
-  btnDay1.textContent = LS.get('label_day1') || 'Day 1';
-  btnDay2.textContent = LS.get('label_day2') || 'Day 2';
+  btnDay1.textContent = LS.get('label_day1')||'Day 1';
+  btnDay2.textContent = LS.get('label_day2')||'Day 2';
   setActiveDay(activeDay, false);
 }
 
-function setActiveDay(day, save = true) {
-  activeDay = day;
-  if (save) LS.set('active_day', day);
-  btnDay1.classList.toggle('active', day === 1);
-  btnDay2.classList.toggle('active', day === 2);
+function setActiveDay(day, save=true) {
+  activeDay=day; if (save) LS.set('active_day',day);
+  btnDay1.classList.toggle('active',day===1);
+  btnDay2.classList.toggle('active',day===2);
 }
 
-btnDay1.addEventListener('click', () => setActiveDay(1));
-btnDay2.addEventListener('click', () => setActiveDay(2));
-
-function getActiveSheet() { return activeDay === 1 ? LS.get('sheet_day1') : LS.get('sheet_day2'); }
-function getActiveLabel() { return activeDay === 1 ? LS.get('label_day1') : LS.get('label_day2'); }
+btnDay1.addEventListener('click',()=>setActiveDay(1));
+btnDay2.addEventListener('click',()=>setActiveDay(2));
+function getActiveSheet() { return activeDay===1?LS.get('sheet_day1'):LS.get('sheet_day2'); }
+function getActiveLabel() { return activeDay===1?LS.get('label_day1'):LS.get('label_day2'); }
 
 // ── COUNTER ──────────────────────────────────────────────────
 const counterEl = document.getElementById('counter');
 let count = parseInt(LS.get('scan_count')||'0');
-function updateCounter() { counterEl.textContent = `${count} scanned`; }
-function incrementCounter() { count++; LS.set('scan_count', count); updateCounter(); }
+function updateCounter() { counterEl.textContent=`${count} scanned`; }
+function incrementCounter() { count++; LS.set('scan_count',count); updateCounter(); }
 updateCounter();
 
 // ── CAMERA ───────────────────────────────────────────────────
@@ -750,225 +571,188 @@ const scanBtn = document.getElementById('scan-btn');
 async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false
+      video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false
     });
-    video.srcObject = stream;
-    video.onplaying = () => {
-      scanBtn.disabled = false;
-      motionCanvas.width = 160; motionCanvas.height = 90;
-      startMotionDetection();
-    };
-  } catch(e) {
-    alert('Camera access required. Please allow camera access and refresh.');
-  }
+    video.srcObject=stream;
+    video.onplaying=()=>{ scanBtn.disabled=false; motionCanvas.width=160; motionCanvas.height=90; startMotionDetection(); };
+  } catch(e) { alert('Camera access required. Please allow camera access and refresh.'); }
 }
 
 // ── DETECTION ────────────────────────────────────────────────
-const frame = document.getElementById('scan-frame');
-const statusText = document.getElementById('status-text');
-const stabilityBarWrap = document.getElementById('stability-bar-wrap');
-const stabilityBar = document.getElementById('stability-bar');
+const frame=document.getElementById('scan-frame');
+const statusText=document.getElementById('status-text');
+const stabilityBarWrap=document.getElementById('stability-bar-wrap');
+const stabilityBar=document.getElementById('stability-bar');
 
-const MOTION_THRESHOLD = 18;
-const STABLE_FRAMES_NEEDED = 16;
-const CONTRAST_THRESHOLD = 45;
-const EDGE_THRESHOLD = 12;
-const MOTION_CHECK_INTERVAL = 60;
-
-let prevImageData = null;
-let stableFrames = 0;
-let motionInterval = null;
-let isScanning = false;
+const MOTION_THRESHOLD=18, STABLE_FRAMES_NEEDED=16, CONTRAST_THRESHOLD=45, EDGE_THRESHOLD=12, MOTION_CHECK_INTERVAL=60;
+let prevImageData=null, stableFrames=0, motionInterval=null, isScanning=false;
 
 function getFrameStats() {
-  const ctx = motionCanvas.getContext('2d');
-  ctx.drawImage(video, 0, 0, 160, 90);
-  const current = ctx.getImageData(0, 0, 160, 90);
-  const pixels = current.data;
-  const w = 160, h = 90;
-
-  let sum = 0, sumSq = 0, count = 0;
-  const brightness = new Float32Array(w * h);
-  for (let i = 0; i < pixels.length; i += 4) {
-    const b = (pixels[i] + pixels[i+1] + pixels[i+2]) / 3;
-    brightness[count] = b; sum += b; sumSq += b * b; count++;
-  }
-  const mean = sum / count;
-  const stdDev = Math.sqrt((sumSq / count) - (mean * mean));
-
-  let edges = 0;
-  for (let y = 1; y < h - 1; y++) {
-    for (let x = 1; x < w - 1; x++) {
-      const idx = y * w + x;
-      const gx = Math.abs(brightness[idx + 1] - brightness[idx - 1]);
-      const gy = Math.abs(brightness[idx + w] - brightness[idx - w]);
-      if (gx + gy > 30) edges++;
-    }
-  }
-  const edgeDensity = edges / (w * h) * 100;
-
-  let motion = 0;
-  if (prevImageData) {
-    for (let i = 0; i < pixels.length; i += 4) motion += Math.abs(pixels[i] - prevImageData.data[i]);
-    motion /= count;
-  } else { motion = 999; }
-
-  prevImageData = current;
-  return { stdDev, edgeDensity, motion };
-}
-
-function looksLikeBadge(stdDev, edgeDensity) {
-  return stdDev > CONTRAST_THRESHOLD && edgeDensity > EDGE_THRESHOLD;
+  const ctx=motionCanvas.getContext('2d');
+  ctx.drawImage(video,0,0,160,90);
+  const current=ctx.getImageData(0,0,160,90);
+  const pixels=current.data, w=160, h=90;
+  let sum=0,sumSq=0,count=0;
+  const brightness=new Float32Array(w*h);
+  for (let i=0;i<pixels.length;i+=4) { const b=(pixels[i]+pixels[i+1]+pixels[i+2])/3; brightness[count]=b; sum+=b; sumSq+=b*b; count++; }
+  const mean=sum/count, stdDev=Math.sqrt((sumSq/count)-(mean*mean));
+  let edges=0;
+  for (let y=1;y<h-1;y++) for (let x=1;x<w-1;x++) { const idx=y*w+x; if (Math.abs(brightness[idx+1]-brightness[idx-1])+Math.abs(brightness[idx+w]-brightness[idx-w])>30) edges++; }
+  const edgeDensity=edges/(w*h)*100;
+  let motion=0;
+  if (prevImageData) { for (let i=0;i<pixels.length;i+=4) motion+=Math.abs(pixels[i]-prevImageData.data[i]); motion/=count; } else { motion=999; }
+  prevImageData=current;
+  return {stdDev,edgeDensity,motion};
 }
 
 function startMotionDetection() {
-  motionInterval = setInterval(() => {
+  motionInterval=setInterval(()=>{
     if (isScanning) return;
-    const { stdDev, edgeDensity, motion } = getFrameStats();
-    const badgeDetected = looksLikeBadge(stdDev, edgeDensity);
-
-    if (!badgeDetected) {
-      stableFrames = 0;
-      setFrameState('idle', 'Point camera at badge', 0);
-      return;
+    const {stdDev,edgeDensity,motion}=getFrameStats();
+    if (stdDev<=CONTRAST_THRESHOLD||edgeDensity<=EDGE_THRESHOLD) { stableFrames=0; setFrameState('idle','Point camera at badge',0); return; }
+    if (motion>MOTION_THRESHOLD) { stableFrames=Math.max(0,stableFrames-2); setFrameState('detecting','Hold steady...',stableFrames/STABLE_FRAMES_NEEDED*100); }
+    else {
+      stableFrames=Math.min(STABLE_FRAMES_NEEDED,stableFrames+1);
+      const progress=stableFrames/STABLE_FRAMES_NEEDED*100;
+      if (stableFrames>=STABLE_FRAMES_NEEDED) { setFrameState('locked','Scanning...',100); triggerScan(); }
+      else setFrameState('detecting','Hold steady...',progress);
     }
-
-    if (motion > MOTION_THRESHOLD) {
-      stableFrames = Math.max(0, stableFrames - 2);
-      setFrameState('detecting', 'Hold steady...', stableFrames / STABLE_FRAMES_NEEDED * 100);
-    } else {
-      stableFrames = Math.min(STABLE_FRAMES_NEEDED, stableFrames + 1);
-      const progress = stableFrames / STABLE_FRAMES_NEEDED * 100;
-      if (stableFrames >= STABLE_FRAMES_NEEDED) {
-        setFrameState('locked', 'Scanning...', 100);
-        triggerScan();
-      } else {
-        setFrameState('detecting', 'Hold steady...', progress);
-      }
-    }
-  }, MOTION_CHECK_INTERVAL);
+  },MOTION_CHECK_INTERVAL);
 }
 
-function stopMotionDetection() {
-  if (motionInterval) { clearInterval(motionInterval); motionInterval = null; }
-}
+function stopMotionDetection() { if (motionInterval) { clearInterval(motionInterval); motionInterval=null; } }
 
-function setFrameState(state, text, progress) {
-  frame.className = `scan-frame ${state}`;
-  statusText.className = state;
-  statusText.textContent = text;
-  stabilityBar.style.width = `${progress}%`;
-  if (state === 'idle') {
-    stabilityBarWrap.classList.remove('show');
-    scanBtn.classList.remove('active');
-  } else {
-    stabilityBarWrap.classList.add('show');
-    if (state === 'locked') scanBtn.classList.add('active');
-    else scanBtn.classList.remove('active');
-  }
+function setFrameState(state,text,progress) {
+  frame.className=`scan-frame ${state}`; statusText.className=state; statusText.textContent=text;
+  stabilityBar.style.width=`${progress}%`;
+  if (state==='idle') { stabilityBarWrap.classList.remove('show'); scanBtn.classList.remove('active'); }
+  else { stabilityBarWrap.classList.add('show'); if (state==='locked') scanBtn.classList.add('active'); else scanBtn.classList.remove('active'); }
 }
 
 // ── CAPTURE ──────────────────────────────────────────────────
 function captureFrame() {
-  const MAX_W = 800;
-  let w = video.videoWidth, h = video.videoHeight;
-  if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
-  canvas.width = w; canvas.height = h;
-  canvas.getContext('2d').drawImage(video, 0, 0, w, h);
-  return canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+  const MAX_W=800; let w=video.videoWidth,h=video.videoHeight;
+  if (w>MAX_W){h=Math.round(h*MAX_W/w);w=MAX_W;}
+  canvas.width=w; canvas.height=h;
+  canvas.getContext('2d').drawImage(video,0,0,w,h);
+  return canvas.toDataURL('image/jpeg',0.5).split(',')[1];
 }
 
 // ── GEMINI ───────────────────────────────────────────────────
 async function callGemini(base64Image) {
-  const key = LS.get('gemini_key');
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`;
-  const body = {
-    contents: [{ parts: [
-      { inline_data: { mime_type: 'image/jpeg', data: base64Image } },
-      { text: 'You are reading an event badge. Transcribe the text exactly as printed, character by character — do not guess or autocorrect. Return ONLY valid JSON, no markdown, no explanation: {"first_name":"","last_name":"","company":""}. Use null for any field not visible on the badge.' }
-    ]}],
-    generationConfig: { thinkingConfig: { thinkingBudget: 0 } }
-  };
-  const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  const key=LS.get('gemini_key');
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${key}`;
+  const body={contents:[{parts:[
+    {inline_data:{mime_type:'image/jpeg',data:base64Image}},
+    {text:'You are reading an event badge. Transcribe the text exactly as printed, character by character — do not guess or autocorrect. Return ONLY valid JSON, no markdown, no explanation: {"first_name":"","last_name":"","company":""}. Use null for any field not visible on the badge.'}
+  ]}],generationConfig:{thinkingConfig:{thinkingBudget:0}}};
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if (!res.ok) throw new Error(`Gemini ${res.status}`);
-  const data = await res.json();
+  const data=await res.json();
   return JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());
 }
 
 // ── N8N SAVE ─────────────────────────────────────────────────
-function saveToExcel(parsed) {
-  const url = LS.get('webhook_url');
+function saveToExcel(first_name, last_name, company) {
+  const url=LS.get('webhook_url');
   if (!url) return;
-  const ind = document.getElementById('saving-indicator');
+  const ind=document.getElementById('saving-indicator');
   ind.classList.add('show');
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ first_name: parsed.first_name, last_name: parsed.last_name, company: parsed.company, sheet: getActiveSheet() })
-  }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
+  fetch(url,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({first_name,last_name,company,sheet:getActiveSheet()})
+  }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
 }
 
 // ── SCAN ─────────────────────────────────────────────────────
 async function triggerScan() {
   if (isScanning) return;
-  isScanning = true; stableFrames = 0;
+  isScanning=true; stableFrames=0;
   try {
-    const image = captureFrame();
-    if (!image || image.length < 1000) { showError('Capture failed. Try again.'); return; }
-    const parsed = await callGemini(image);
-    showSuccess(parsed);
-    saveToExcel(parsed);
+    const image=captureFrame();
+    if (!image||image.length<1000) { showError('Capture failed. Try again.'); return; }
+    const parsed=await callGemini(image);
+    showReview(parsed);
   } catch(e) {
     console.error(e);
     showError('Could not read badge. Try again.');
   }
 }
 
-scanBtn.addEventListener('click', () => { if (isScanning || scanBtn.disabled) return; triggerScan(); });
+scanBtn.addEventListener('click',()=>{ if (isScanning||scanBtn.disabled) return; triggerScan(); });
 
-// ── RESULT UI ────────────────────────────────────────────────
-const overlay = document.getElementById('result-overlay');
-const card = document.getElementById('result-card');
+// ── RESULT OVERLAY ───────────────────────────────────────────
+const overlay=document.getElementById('result-overlay');
+const reviewState=document.getElementById('review-state');
+const savedState=document.getElementById('saved-state');
+const errorState=document.getElementById('error-state');
 
-function showSuccess(data) {
-  card.className = 'result-card success';
-  document.getElementById('result-status').textContent = '✓ Captured';
-  document.getElementById('result-day-badge').textContent = getActiveLabel();
-  document.getElementById('result-name').textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || '—';
-  document.getElementById('result-company').textContent = data.company || '—';
-  document.getElementById('result-message').textContent = '';
+function showReview(data) {
+  const name=[data.first_name,data.last_name].filter(Boolean).join(' ');
+  document.getElementById('review-name').value=name||'';
+  document.getElementById('review-company').value=data.company||'';
+  document.getElementById('review-day-badge').textContent=getActiveLabel();
+  reviewState.style.display='flex';
+  savedState.classList.remove('show');
+  errorState.style.display='none';
   overlay.classList.add('show');
-  incrementCounter();
 }
 
 function showError(msg) {
-  card.className = 'result-card error';
-  document.getElementById('result-status').textContent = '✕ Scan failed';
-  document.getElementById('result-day-badge').textContent = '';
-  document.getElementById('result-name').textContent = '';
-  document.getElementById('result-company').textContent = '';
-  document.getElementById('result-message').textContent = msg;
+  errorState.style.display='flex';
+  reviewState.style.display='none';
+  savedState.classList.remove('show');
+  document.getElementById('error-message').textContent=msg;
   overlay.classList.add('show');
 }
 
-document.getElementById('reset-btn').addEventListener('click', () => {
-  overlay.classList.remove('show');
-  setFrameState('idle', 'Point camera at badge', 0);
-  isScanning = false; prevImageData = null;
+// Confirm — save to Excel
+document.getElementById('btn-confirm').addEventListener('click',()=>{
+  const fullName=document.getElementById('review-name').value.trim();
+  const company=document.getElementById('review-company').value.trim();
+  const parts=fullName.split(' ');
+  const first_name=parts[0]||null;
+  const last_name=parts.slice(1).join(' ')||null;
+
+  saveToExcel(first_name,last_name,company||null);
+
+  // Show saved confirmation
+  document.getElementById('saved-name').textContent=fullName||'—';
+  document.getElementById('saved-company').textContent=company||'—';
+  document.getElementById('saved-day-badge').textContent=getActiveLabel();
+  reviewState.style.display='none';
+  savedState.classList.add('show');
+  incrementCounter();
 });
 
-// ── INIT ─────────────────────────────────────────────────────
-document.getElementById('gemini-key').value  = LS.get('gemini_key');
-document.getElementById('webhook-url').value = LS.get('webhook_url');
-document.getElementById('label-day1').value  = LS.get('label_day1');
-document.getElementById('sheet-day1').value  = LS.get('sheet_day1');
-document.getElementById('label-day2').value  = LS.get('label_day2');
-document.getElementById('sheet-day2').value  = LS.get('sheet_day2');
+// Discard
+document.getElementById('btn-discard').addEventListener('click',()=>{ resetOverlay(); });
 
-const allSet = LS.get('gemini_key') && LS.get('webhook_url') && LS.get('sheet_day1') && LS.get('sheet_day2');
-if (allSet) showApp();
-else configEl.style.display = 'flex';
+// Next scan after saved
+document.getElementById('btn-next').addEventListener('click',()=>{ resetOverlay(); });
+
+// Retry after error
+document.getElementById('btn-retry').addEventListener('click',()=>{ resetOverlay(); });
+
+function resetOverlay() {
+  overlay.classList.remove('show');
+  reviewState.style.display='flex';
+  savedState.classList.remove('show');
+  errorState.style.display='none';
+  setFrameState('idle','Point camera at badge',0);
+  isScanning=false; prevImageData=null;
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+document.getElementById('gemini-key').value=LS.get('gemini_key');
+document.getElementById('webhook-url').value=LS.get('webhook_url');
+document.getElementById('label-day1').value=LS.get('label_day1');
+document.getElementById('sheet-day1').value=LS.get('sheet_day1');
+document.getElementById('label-day2').value=LS.get('label_day2');
+document.getElementById('sheet-day2').value=LS.get('sheet_day2');
+
+const allSet=LS.get('gemini_key')&&LS.get('webhook_url')&&LS.get('sheet_day1')&&LS.get('sheet_day2');
+if (allSet) showApp(); else configEl.style.display='flex';
 </script>
 </body>
 </html>
