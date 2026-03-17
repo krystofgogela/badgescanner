@@ -44,7 +44,8 @@
     display: flex;
     flex-direction: column;
     padding: 48px 24px 32px;
-    gap: 24px;
+    gap: 20px;
+    overflow-y: auto;
   }
 
   #config h1 {
@@ -82,8 +83,24 @@
 
   .field input:focus { border-color: var(--green); }
 
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 10px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+  }
+
   #config-save {
-    margin-top: auto;
+    margin-top: 8px;
     background: var(--green);
     color: #000;
     border: none;
@@ -115,28 +132,10 @@
   #install-banner.show { display: flex; }
   #install-banner p { font-size: 13px; color: var(--text); line-height: 1.4; flex: 1; }
   #install-banner p span { display: block; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  #install-btn {
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-
+  #install-btn { background: var(--green); color: #000; border: none; border-radius: 8px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   #install-dismiss { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 0 4px; }
 
-  #app {
-    display: none;
-    flex-direction: column;
-    height: 100dvh;
-    position: relative;
-  }
+  #app { display: none; flex-direction: column; height: 100dvh; position: relative; }
 
   #header {
     position: absolute;
@@ -165,19 +164,13 @@
     border: 1px solid var(--border);
     border-radius: 20px;
     width: 36px; height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted); font-size: 16px;
   }
 
-  /* DAY TOGGLE */
   #day-toggle {
     position: absolute;
-    top: 68px;
-    left: 50%;
+    top: 68px; left: 50%;
     transform: translateX(-50%);
     z-index: 10;
     background: rgba(0,0,0,0.6);
@@ -204,19 +197,9 @@
     white-space: nowrap;
   }
 
-  .day-btn.active {
-    background: var(--green);
-    color: #000;
-    font-weight: 600;
-  }
+  .day-btn.active { background: var(--green); color: #000; font-weight: 600; }
 
-  #viewfinder {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    background: #000;
-  }
-
+  #viewfinder { flex: 1; position: relative; overflow: hidden; background: #000; }
   #video { width: 100%; height: 100%; object-fit: cover; display: block; }
   #canvas { display: none; }
   #motion-canvas { display: none; }
@@ -233,8 +216,7 @@
 
   .scan-frame::before, .scan-frame::after,
   .scan-frame span::before, .scan-frame span::after {
-    content: '';
-    position: absolute;
+    content: ''; position: absolute;
     width: 20px; height: 20px;
     border-style: solid;
     transition: border-color 0.3s;
@@ -253,12 +235,9 @@
   .scan-frame span::after { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
 
   .scan-line {
-    position: absolute;
-    left: 0; right: 0;
-    height: 1px;
+    position: absolute; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, var(--green), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
+    opacity: 0; transition: opacity 0.3s;
   }
 
   .scan-frame.locked .scan-line { opacity: 0.8; animation: scan 1s ease-in-out infinite; }
@@ -269,20 +248,13 @@
     bottom: 0; left: 0; right: 0;
     padding: 24px 24px 40px;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
   }
 
   #status-text {
     font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    transition: color 0.3s;
-    height: 16px;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4); transition: color 0.3s; height: 16px;
   }
 
   #status-text.detecting { color: var(--yellow); }
@@ -291,79 +263,47 @@
   #stability-bar-wrap {
     width: 120px; height: 3px;
     background: rgba(255,255,255,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.3s;
+    border-radius: 2px; overflow: hidden;
+    opacity: 0; transition: opacity 0.3s;
   }
 
   #stability-bar-wrap.show { opacity: 1; }
-
-  #stability-bar {
-    height: 100%; width: 0%;
-    background: var(--green);
-    border-radius: 2px;
-    transition: width 0.1s linear;
-  }
+  #stability-bar { height: 100%; width: 0%; background: var(--green); border-radius: 2px; transition: width 0.1s linear; }
 
   #scan-btn {
-    width: 64px; height: 64px;
-    border-radius: 50%;
+    width: 64px; height: 64px; border-radius: 50%;
     background: rgba(255,255,255,0.15);
     border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    color: white;
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.05em;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; color: white;
+    font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.05em;
   }
 
   #scan-btn:active { transform: scale(0.93); }
-  #scan-btn.active {
-    background: var(--green);
-    border-color: var(--green);
-    box-shadow: 0 0 32px rgba(0,255,135,0.4);
-    color: #000;
-  }
+  #scan-btn.active { background: var(--green); border-color: var(--green); box-shadow: 0 0 32px rgba(0,255,135,0.4); color: #000; }
 
   #result-overlay {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background: rgba(0,0,0,0.85);
     backdrop-filter: blur(4px);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px;
-    gap: 24px;
-    z-index: 20;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px; gap: 24px; z-index: 20;
   }
 
   #result-overlay.show { display: flex; }
 
   .result-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    width: 100%;
-    max-width: 360px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; width: 100%; max-width: 360px;
   }
 
   .result-card.success { border-color: var(--green); }
   .result-card.error { border-color: var(--red); }
 
   .result-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;
   }
 
   .success .result-status { color: var(--green); }
@@ -374,32 +314,17 @@
   .result-message { font-size: 15px; color: var(--muted); line-height: 1.5; }
 
   #reset-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 32px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    cursor: pointer;
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 32px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
   }
 
   #saving-indicator {
-    position: absolute;
-    top: 20px; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 16px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 30;
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.8); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 16px;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+    opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 30;
   }
 
   #saving-indicator.show { opacity: 1; }
@@ -410,22 +335,41 @@
 <div id="config">
   <h1>Setup</h1>
   <h2>Badge Scanner<br>Configuration</h2>
+
   <div class="field">
     <label>Gemini API Key</label>
     <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
   </div>
+
   <div class="field">
     <label>n8n Webhook URL</label>
     <input type="url" id="webhook-url" placeholder="https://n8n.your-domain.com/webhook/..." autocomplete="off">
   </div>
-  <div class="field">
-    <label>Day 1 Sheet Name</label>
-    <input type="text" id="sheet-day1" placeholder="e.g. Day 1 or 22.4." autocomplete="off">
+
+  <div class="section-label">Day 1</div>
+  <div class="field-row">
+    <div class="field">
+      <label>Display Name</label>
+      <input type="text" id="label-day1" placeholder="e.g. Day 1" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Sheet ID</label>
+      <input type="text" id="sheet-day1" placeholder="{00000000-...}" autocomplete="off">
+    </div>
   </div>
-  <div class="field">
-    <label>Day 2 Sheet Name</label>
-    <input type="text" id="sheet-day2" placeholder="e.g. Day 2 or 23.4." autocomplete="off">
+
+  <div class="section-label">Day 2</div>
+  <div class="field-row">
+    <div class="field">
+      <label>Display Name</label>
+      <input type="text" id="label-day2" placeholder="e.g. Day 2" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Sheet ID</label>
+      <input type="text" id="sheet-day2" placeholder="{562517FD-...}" autocomplete="off">
+    </div>
   </div>
+
   <button id="config-save">Start Scanning</button>
 </div>
 
@@ -441,7 +385,6 @@
     <div id="settings-btn">⚙</div>
   </div>
 
-  <!-- DAY TOGGLE -->
   <div id="day-toggle">
     <button class="day-btn active" id="btn-day1">Day 1</button>
     <button class="day-btn" id="btn-day2">Day 2</button>
@@ -451,10 +394,7 @@
     <video id="video" autoplay playsinline muted></video>
     <canvas id="canvas"></canvas>
     <canvas id="motion-canvas"></canvas>
-    <div class="scan-frame idle" id="scan-frame">
-      <span></span>
-      <div class="scan-line"></div>
-    </div>
+    <div class="scan-frame idle" id="scan-frame"><span></span><div class="scan-line"></div></div>
   </div>
 
   <div id="controls">
@@ -488,15 +428,8 @@ if ('serviceWorker' in navigator) {
 // ── PWA INSTALL ──────────────────────────────────────────────
 let deferredPrompt;
 const installBanner = document.getElementById('install-banner');
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBanner.classList.add('show');
-});
-document.getElementById('install-btn').addEventListener('click', async () => {
-  installBanner.classList.remove('show');
-  if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
-});
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; installBanner.classList.add('show'); });
+document.getElementById('install-btn').addEventListener('click', async () => { installBanner.classList.remove('show'); if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; } });
 document.getElementById('install-dismiss').addEventListener('click', () => installBanner.classList.remove('show'));
 window.addEventListener('appinstalled', () => installBanner.classList.remove('show'));
 
@@ -506,24 +439,30 @@ const configEl = document.getElementById('config');
 const appEl = document.getElementById('app');
 
 document.getElementById('config-save').addEventListener('click', () => {
-  const key = document.getElementById('gemini-key').value.trim();
-  const url = document.getElementById('webhook-url').value.trim();
-  const day1 = document.getElementById('sheet-day1').value.trim();
-  const day2 = document.getElementById('sheet-day2').value.trim();
-  if (!key || !url || !day1 || !day2) { alert('All fields are required.'); return; }
+  const key    = document.getElementById('gemini-key').value.trim();
+  const url    = document.getElementById('webhook-url').value.trim();
+  const lbl1   = document.getElementById('label-day1').value.trim();
+  const sheet1 = document.getElementById('sheet-day1').value.trim();
+  const lbl2   = document.getElementById('label-day2').value.trim();
+  const sheet2 = document.getElementById('sheet-day2').value.trim();
+  if (!key || !url || !lbl1 || !sheet1 || !lbl2 || !sheet2) { alert('All fields are required.'); return; }
   LS.set('gemini_key', key);
   LS.set('webhook_url', url);
-  LS.set('sheet_day1', day1);
-  LS.set('sheet_day2', day2);
+  LS.set('label_day1', lbl1);
+  LS.set('sheet_day1', sheet1);
+  LS.set('label_day2', lbl2);
+  LS.set('sheet_day2', sheet2);
   showApp();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
   stopMotionDetection();
-  document.getElementById('gemini-key').value = LS.get('gemini_key');
+  document.getElementById('gemini-key').value  = LS.get('gemini_key');
   document.getElementById('webhook-url').value = LS.get('webhook_url');
-  document.getElementById('sheet-day1').value = LS.get('sheet_day1');
-  document.getElementById('sheet-day2').value = LS.get('sheet_day2');
+  document.getElementById('label-day1').value  = LS.get('label_day1');
+  document.getElementById('sheet-day1').value  = LS.get('sheet_day1');
+  document.getElementById('label-day2').value  = LS.get('label_day2');
+  document.getElementById('sheet-day2').value  = LS.get('sheet_day2');
   configEl.style.display = 'flex';
   appEl.style.display = 'none';
 });
@@ -537,13 +476,12 @@ function showApp() {
 
 // ── DAY TOGGLE ───────────────────────────────────────────────
 let activeDay = parseInt(LS.get('active_day') || '1');
-
 const btnDay1 = document.getElementById('btn-day1');
 const btnDay2 = document.getElementById('btn-day2');
 
 function updateDayToggleLabels() {
-  btnDay1.textContent = LS.get('sheet_day1') || 'Day 1';
-  btnDay2.textContent = LS.get('sheet_day2') || 'Day 2';
+  btnDay1.textContent = LS.get('label_day1') || 'Day 1';
+  btnDay2.textContent = LS.get('label_day2') || 'Day 2';
   setActiveDay(activeDay, false);
 }
 
@@ -557,9 +495,8 @@ function setActiveDay(day, save = true) {
 btnDay1.addEventListener('click', () => setActiveDay(1));
 btnDay2.addEventListener('click', () => setActiveDay(2));
 
-function getActiveSheet() {
-  return activeDay === 1 ? LS.get('sheet_day1') : LS.get('sheet_day2');
-}
+function getActiveSheet() { return activeDay === 1 ? LS.get('sheet_day1') : LS.get('sheet_day2'); }
+function getActiveLabel() { return activeDay === 1 ? LS.get('label_day1') : LS.get('label_day2'); }
 
 // ── COUNTER ──────────────────────────────────────────────────
 const counterEl = document.getElementById('counter');
@@ -598,10 +535,12 @@ const statusText = document.getElementById('status-text');
 const stabilityBarWrap = document.getElementById('stability-bar-wrap');
 const stabilityBar = document.getElementById('stability-bar');
 
-const MOTION_THRESHOLD = 20;
-const STABLE_FRAMES_NEEDED = 14;
-const CONTRAST_THRESHOLD = 35;
-const MOTION_CHECK_INTERVAL = 55;
+// Higher thresholds = less false triggering
+const MOTION_THRESHOLD = 18;
+const STABLE_FRAMES_NEEDED = 16;
+const CONTRAST_THRESHOLD = 45;   // raised — tables/floors typically <35
+const EDGE_THRESHOLD = 12;        // requires actual edges (text/lines), not just colour variation
+const MOTION_CHECK_INTERVAL = 60;
 
 let prevImageData = null;
 let stableFrames = 0;
@@ -613,15 +552,33 @@ function getFrameStats() {
   ctx.drawImage(video, 0, 0, 160, 90);
   const current = ctx.getImageData(0, 0, 160, 90);
   const pixels = current.data;
+  const w = 160, h = 90;
 
+  // Contrast (stdDev of brightness)
   let sum = 0, sumSq = 0, count = 0;
+  const brightness = new Float32Array(w * h);
   for (let i = 0; i < pixels.length; i += 4) {
     const b = (pixels[i] + pixels[i+1] + pixels[i+2]) / 3;
+    brightness[count] = b;
     sum += b; sumSq += b * b; count++;
   }
   const mean = sum / count;
   const stdDev = Math.sqrt((sumSq / count) - (mean * mean));
 
+  // Edge density — counts pixels with large brightness diff from neighbour
+  // This filters out uniform surfaces (tables, walls) even if colourful
+  let edges = 0;
+  for (let y = 1; y < h - 1; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      const idx = y * w + x;
+      const gx = Math.abs(brightness[idx + 1] - brightness[idx - 1]);
+      const gy = Math.abs(brightness[idx + w] - brightness[idx - w]);
+      if (gx + gy > 30) edges++;
+    }
+  }
+  const edgeDensity = edges / (w * h) * 100;
+
+  // Motion diff from previous frame
   let motion = 0;
   if (prevImageData) {
     for (let i = 0; i < pixels.length; i += 4) {
@@ -633,16 +590,22 @@ function getFrameStats() {
   }
 
   prevImageData = current;
-  return { stdDev, motion };
+  return { stdDev, edgeDensity, motion };
+}
+
+function looksLikeBadge(stdDev, edgeDensity) {
+  // Must have BOTH high contrast AND meaningful edges
+  // A plain table might have stdDev >35 if mixed colours but low edge density
+  return stdDev > CONTRAST_THRESHOLD && edgeDensity > EDGE_THRESHOLD;
 }
 
 function startMotionDetection() {
   motionInterval = setInterval(() => {
     if (isScanning) return;
-    const { stdDev, motion } = getFrameStats();
-    const looksLikeBadge = stdDev > CONTRAST_THRESHOLD;
+    const { stdDev, edgeDensity, motion } = getFrameStats();
+    const badgeDetected = looksLikeBadge(stdDev, edgeDensity);
 
-    if (!looksLikeBadge) {
+    if (!badgeDetected) {
       stableFrames = 0;
       setFrameState('idle', 'Point camera at badge', 0);
       return;
@@ -700,7 +663,7 @@ async function callGemini(base64Image) {
   const body = {
     contents: [{ parts: [
       { inline_data: { mime_type: 'image/jpeg', data: base64Image } },
-      { text: 'Return JSON only, no markdown: {"first_name":"","last_name":"","company":""}. Extract from badge. Null if missing.' }
+      { text: 'You are reading an event badge. Transcribe the text exactly as printed, character by character — do not guess or autocorrect. Return ONLY valid JSON, no markdown, no explanation: {"first_name":"","last_name":"","company":""}. Use null for any field not visible on the badge.' }
     ]}],
     generationConfig: { thinkingConfig: { thinkingBudget: 0 } }
   };
@@ -723,7 +686,7 @@ function saveToExcel(parsed) {
       first_name: parsed.first_name,
       last_name: parsed.last_name,
       company: parsed.company,
-      sheet: getActiveSheet()   // ← sends sheet name to n8n
+      sheet: getActiveSheet()
     })
   }).finally(() => setTimeout(() => ind.classList.remove('show'), 1500));
 }
@@ -756,7 +719,7 @@ const card = document.getElementById('result-card');
 
 function showSuccess(data) {
   card.className = 'result-card success';
-  document.getElementById('result-status').textContent = `✓ Saved to ${getActiveSheet()}`;
+  document.getElementById('result-status').textContent = `✓ Saved · ${getActiveLabel()}`;
   document.getElementById('result-name').textContent = [data.first_name, data.last_name].filter(Boolean).join(' ') || '—';
   document.getElementById('result-company').textContent = data.company || '—';
   document.getElementById('result-message').textContent = '';
@@ -781,10 +744,12 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 // ── INIT ─────────────────────────────────────────────────────
-document.getElementById('gemini-key').value = LS.get('gemini_key');
+document.getElementById('gemini-key').value  = LS.get('gemini_key');
 document.getElementById('webhook-url').value = LS.get('webhook_url');
-document.getElementById('sheet-day1').value = LS.get('sheet_day1');
-document.getElementById('sheet-day2').value = LS.get('sheet_day2');
+document.getElementById('label-day1').value  = LS.get('label_day1');
+document.getElementById('sheet-day1').value  = LS.get('sheet_day1');
+document.getElementById('label-day2').value  = LS.get('label_day2');
+document.getElementById('sheet-day2').value  = LS.get('sheet_day2');
 
 const allSet = LS.get('gemini_key') && LS.get('webhook_url') && LS.get('sheet_day1') && LS.get('sheet_day2');
 if (allSet) showApp();
