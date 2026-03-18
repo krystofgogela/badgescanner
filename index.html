@@ -16,7 +16,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
 
-/* CONFIG */
 #config{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;flex-direction:column;overflow-y:auto;}
 .config-header{padding:48px 24px 32px;border-bottom:1px solid var(--border);background:var(--bg-2);}
 .config-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
@@ -25,16 +24,13 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 .config-header h2{font-size:24px;font-weight:700;line-height:1.2;}
 .config-header p{margin-top:6px;font-size:14px;color:var(--muted-light);line-height:1.5;}
 .config-body{padding:24px;display:flex;flex-direction:column;gap:20px;flex:1;}
-.section-label{font-size:11px;font-weight:600;color:var(--red);letter-spacing:.12em;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--border);margin-top:4px;}
 .field{display:flex;flex-direction:column;gap:6px;}
 .field label{font-size:12px;font-weight:500;color:var(--muted-light);}
 .field input{background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;outline:none;width:100%;transition:border-color .2s;}
 .field input:focus{border-color:var(--red);}
 .field input::placeholder{color:var(--muted);}
-.field-row{display:grid;grid-template-columns:1fr 1.6fr;gap:10px;}
 #config-save{background:var(--red);color:#fff;border:none;border-radius:8px;padding:16px;font-family:'Instrument Sans',Helvetica,sans-serif;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}
 
-/* APP */
 #app{display:none;flex-direction:column;height:100vh;height:100dvh;position:relative;}
 #header{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
 #header-logo{display:flex;align-items:center;gap:8px;background:rgba(12,17,29,.75);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:20px;padding:6px 12px 6px 8px;}
@@ -73,8 +69,7 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 #scan-btn:active{transform:scale(.93);}
 #scan-btn:disabled{opacity:.4;box-shadow:none;}
 
-/* OVERLAYS — shared */
-.overlay{position:absolute;inset:0;background:rgba(12,17,29,.92);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;z-index:20;}
+.overlay{position:absolute;inset:0;background:rgba(12,17,29,.92);backdrop-filter:blur(6px);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:16px;z-index:20;overflow-y:auto;}
 .overlay.show{display:flex;}
 .card{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:20px;width:100%;max-width:360px;}
 .card.red{border-color:var(--red);}
@@ -93,20 +88,19 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 .btn-sec{flex:1;background:transparent;border:1px solid var(--border);border-radius:8px;padding:13px;color:var(--muted-light);font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:500;cursor:pointer;}
 .btn-pri{flex:2;background:var(--red);border:none;border-radius:8px;padding:13px;color:#fff;font-family:'Instrument Sans',Helvetica,sans-serif;font-size:14px;font-weight:600;cursor:pointer;}
 .btn-pri:active{background:var(--red-dark);}
-.btn-pri.full{flex:1;}
+.btn-full{flex:1;}
 .err-msg{font-size:14px;color:var(--muted-light);line-height:1.5;margin-top:8px;}
 
-/* SCORE INPUT */
 #score-big{font-size:48px;font-weight:700;text-align:center;background:transparent;border:none;border-bottom:2px solid var(--border);color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;width:100%;max-width:200px;outline:none;padding:8px 0;margin:16px auto;display:block;transition:border-color .2s;}
 #score-big:focus{border-color:var(--red);}
+#hscore-big{font-size:48px;font-weight:700;text-align:center;background:transparent;border:none;border-bottom:2px solid var(--border);color:var(--text);font-family:'Instrument Sans',Helvetica,sans-serif;width:100%;max-width:200px;outline:none;padding:8px 0;margin:16px auto;display:block;transition:border-color .2s;}
+#hscore-big:focus{border-color:var(--red);}
 .score-name{font-size:16px;font-weight:600;text-align:center;margin-bottom:4px;}
 .score-company{font-size:13px;color:var(--muted-light);text-align:center;margin-bottom:8px;}
 
-/* SAVING INDICATOR */
 #saving-indicator{position:absolute;top:20px;left:50%;transform:translateX(-50%);background:rgba(12,17,29,.9);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:500;color:var(--muted-light);opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;z-index:30;}
 #saving-indicator.show{opacity:1;}
 
-/* HISTORY SCREEN */
 #history-screen{position:fixed;inset:0;background:var(--bg);z-index:50;display:none;flex-direction:column;}
 #history-screen.show{display:flex;}
 .history-header{display:flex;align-items:center;gap:12px;padding:56px 20px 16px;border-bottom:1px solid var(--border);background:var(--bg-2);}
@@ -118,14 +112,13 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 .history-item:active{border-color:var(--red);}
 .history-item-left{flex:1;}
 .history-item-name{font-size:15px;font-weight:600;margin-bottom:2px;}
-.history-item-company{font-size:12px;color:var(--muted-light);}
+.history-item-sub{font-size:12px;color:var(--muted-light);}
 .history-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
 .history-score{font-size:18px;font-weight:700;color:var(--red-light);}
 .history-score.empty{font-size:13px;color:var(--muted);font-weight:400;}
 .history-day{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
 
-/* iOS banner */
-#ios-banner{position:fixed;bottom:24px;left:16px;right:16px;background:var(--bg-2);border:1px solid var(--red);border-radius:12px;padding:16px 20px;display:none;flex-direction:column;gap:10px;z-index:200;box-shadow:0 8px 32px rgba(240,68,56,.15);}
+#ios-banner{position:fixed;bottom:24px;left:16px;right:16px;background:var(--bg-2);border:1px solid var(--red);border-radius:12px;padding:16px 20px;display:none;flex-direction:column;gap:10px;z-index:200;}
 #ios-banner.show{display:flex;}
 .ios-top{display:flex;align-items:center;justify-content:space-between;}
 .ios-title{font-size:13px;font-weight:600;}
@@ -135,7 +128,6 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 </head>
 <body>
 
-<!-- CONFIG -->
 <div id="config">
   <div class="config-header">
     <div class="config-logo">
@@ -151,7 +143,6 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div id="header">
     <div id="header-logo">
@@ -180,9 +171,9 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     <button id="scan-btn" disabled>TAP</button>
   </div>
 
-  <!-- REVIEW OVERLAY -->
+  <!-- REVIEW -->
   <div class="overlay" id="review-overlay">
-    <div class="card red">
+    <div class="card red" style="width:100%;max-width:360px;">
       <div class="card-top">
         <div class="card-status">Review & Confirm</div>
         <div class="day-badge" id="review-day-badge"></div>
@@ -192,6 +183,10 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
       <input class="inp" id="review-name" type="text" placeholder="Full name">
       <div class="lbl">Company</div>
       <input class="inp sm" id="review-company" type="text" placeholder="Company">
+      <div class="lbl">Role</div>
+      <input class="inp sm" id="review-role" type="text" placeholder="Role / Job title">
+      <div class="lbl">Badge Type</div>
+      <input class="inp sm" id="review-badge-type" type="text" placeholder="Exhibitor / Visitor">
     </div>
     <div class="actions">
       <button class="btn-sec" id="btn-discard">Discard</button>
@@ -199,9 +194,9 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     </div>
   </div>
 
-  <!-- SCORE OVERLAY -->
+  <!-- SCORE -->
   <div class="overlay" id="score-overlay">
-    <div class="card red" style="text-align:center;">
+    <div class="card red" style="text-align:center;width:100%;max-width:360px;">
       <div class="card-top" style="justify-content:center;">
         <div class="card-status">Input Score</div>
       </div>
@@ -216,16 +211,18 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     </div>
   </div>
 
-  <!-- SAVED OVERLAY -->
+  <!-- SAVED -->
   <div class="overlay" id="saved-overlay">
-    <div class="card red">
+    <div class="card red" style="width:100%;max-width:360px;">
       <div class="card-top">
         <div class="card-status">✓ Saved</div>
         <div class="day-badge" id="saved-day-badge"></div>
       </div>
       <div class="divider"></div>
       <div style="font-size:20px;font-weight:700;margin-bottom:4px;" id="saved-name"></div>
-      <div style="font-size:13px;color:var(--muted-light);" id="saved-company"></div>
+      <div style="font-size:13px;color:var(--muted-light);margin-bottom:2px;" id="saved-company"></div>
+      <div style="font-size:13px;color:var(--muted-light);margin-bottom:2px;" id="saved-role"></div>
+      <div style="font-size:13px;color:var(--muted-light);margin-bottom:2px;" id="saved-badge-type"></div>
       <div style="font-size:13px;color:var(--muted-light);margin-top:6px;" id="saved-score-display"></div>
     </div>
     <div class="actions">
@@ -233,9 +230,9 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
     </div>
   </div>
 
-  <!-- ERROR OVERLAY -->
+  <!-- ERROR -->
   <div class="overlay" id="error-overlay">
-    <div class="card err">
+    <div class="card err" style="width:100%;max-width:360px;">
       <div class="card-top"><div class="card-status">✕ Scan Failed</div></div>
       <div class="divider"></div>
       <div class="err-msg" id="error-message"></div>
@@ -246,17 +243,15 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
   <div id="saving-indicator">Saving...</div>
 </div>
 
-<!-- HISTORY SCREEN -->
+<!-- HISTORY -->
 <div id="history-screen">
   <div class="history-header">
     <h2>Scan History</h2>
     <button id="history-close">✕</button>
   </div>
   <div id="history-list"></div>
-
-  <!-- HISTORY SCORE OVERLAY (inside history) -->
   <div class="overlay" id="history-score-overlay">
-    <div class="card red" style="text-align:center;">
+    <div class="card red" style="text-align:center;width:100%;max-width:360px;">
       <div class="card-top" style="justify-content:center;">
         <div class="card-status">Update Score</div>
       </div>
@@ -272,7 +267,6 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
   </div>
 </div>
 
-<!-- iOS BANNER -->
 <div id="ios-banner">
   <div class="ios-top">
     <div class="ios-title">Install this app</div>
@@ -288,7 +282,6 @@ body{background:var(--bg);color:var(--text);font-family:'Instrument Sans',Helvet
 <script>
 const LS={get:k=>localStorage.getItem(k)||'',set:(k,v)=>localStorage.setItem(k,v)};
 
-// ── CONFIG ───────────────────────────────────────────────────
 const WEBHOOK_APPEND='https://n8n.pfm-intelligence.com/webhook/0bb1992e-a610-4401-af63-402efd4d51f4';
 const WEBHOOK_SCORE='https://n8n.pfm-intelligence.com/webhook/update-score';
 const SHEETS={
@@ -300,12 +293,10 @@ function getKey(){return LS.get('gemini_key');}
 function getSheet(){return SHEETS[activeDay].id;}
 function getLabel(){return SHEETS[activeDay].label;}
 
-// ── SERVICE WORKER ───────────────────────────────────────────
 if('serviceWorker'in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('/badgescanner/sw.js').catch(()=>{}));
 }
 
-// ── iOS BANNER ───────────────────────────────────────────────
 const isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
 const isStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
 if(isIos&&!isStandalone&&!LS.get('ios_dismissed')){
@@ -316,7 +307,6 @@ document.getElementById('ios-dismiss').addEventListener('click',()=>{
   LS.set('ios_dismissed','1');
 });
 
-// ── CONFIG SCREEN ────────────────────────────────────────────
 document.getElementById('config-save').addEventListener('click',()=>{
   const key=document.getElementById('gemini-key').value.trim();
   if(!key){alert('API key required.');return;}
@@ -338,7 +328,6 @@ function startApp(){
   startCamera();
 }
 
-// ── DAY TOGGLE ───────────────────────────────────────────────
 let activeDay=parseInt(LS.get('active_day')||'1');
 const btnDay1=document.getElementById('btn-day1');
 const btnDay2=document.getElementById('btn-day2');
@@ -352,35 +341,18 @@ function setActiveDay(d){activeDay=d;LS.set('active_day',d);updateDayToggleLabel
 btnDay1.addEventListener('click',()=>setActiveDay(1));
 btnDay2.addEventListener('click',()=>setActiveDay(2));
 
-// ── COUNTER ──────────────────────────────────────────────────
 const counterEl=document.getElementById('counter');
 let count=parseInt(LS.get('scan_count')||'0');
 function updateCounter(){counterEl.textContent=count+' scanned';}
 function incrementCounter(){count++;LS.set('scan_count',count);updateCounter();}
 updateCounter();
 
-// ── HISTORY STORAGE ──────────────────────────────────────────
 function todayKey(){return'history_'+new Date().toISOString().slice(0,10);}
-
-function getHistory(){
-  try{return JSON.parse(localStorage.getItem(todayKey())||'[]');}catch{return[];}
-}
-
+function getHistory(){try{return JSON.parse(localStorage.getItem(todayKey())||'[]');}catch{return[];}}
 function saveHistory(arr){localStorage.setItem(todayKey(),JSON.stringify(arr));}
+function addToHistory(entry){const arr=getHistory();arr.unshift(entry);saveHistory(arr);}
+function updateHistoryScore(scanId,score){const arr=getHistory();const item=arr.find(e=>e.scan_id===scanId);if(item){item.score=score;saveHistory(arr);}}
 
-function addToHistory(entry){
-  const arr=getHistory();
-  arr.unshift(entry);
-  saveHistory(arr);
-}
-
-function updateHistoryScore(scanId,score){
-  const arr=getHistory();
-  const item=arr.find(e=>e.scan_id===scanId);
-  if(item){item.score=score;saveHistory(arr);}
-}
-
-// ── CAMERA ───────────────────────────────────────────────────
 const video=document.getElementById('video');
 const canvas=document.getElementById('canvas');
 const motionCanvas=document.getElementById('motion-canvas');
@@ -407,7 +379,6 @@ function showTapToStart(){
   o.addEventListener('click',async()=>{o.remove();try{await video.play();}catch(e){}});
 }
 
-// ── MOTION DETECTION ─────────────────────────────────────────
 const frameEl=document.getElementById('scan-frame');
 const statusText=document.getElementById('status-text');
 const stabilityBarWrap=document.getElementById('stability-bar-wrap');
@@ -455,7 +426,6 @@ function setFrameState(state,text,progress){
   if(state==='idle')stabilityBarWrap.classList.remove('show');else stabilityBarWrap.classList.add('show');
 }
 
-// ── CAPTURE ──────────────────────────────────────────────────
 function captureFrame(){
   const MAX=800;let w=video.videoWidth,h=video.videoHeight;
   if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
@@ -466,13 +436,12 @@ function captureFrame(){
 
 function genScanId(){return'scan_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);}
 
-// ── GEMINI ───────────────────────────────────────────────────
 async function callGemini(b64){
   const key=getKey();
   const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key='+key;
   const body={contents:[{parts:[
     {inline_data:{mime_type:'image/jpeg',data:b64}},
-    {text:'You are reading an event badge. Transcribe text exactly as printed, character by character, do not autocorrect. Return ONLY valid JSON no markdown: {"first_name":"","last_name":"","company":""}. Use null if not visible.'}
+    {text:'You are reading an event badge. Transcribe text exactly as printed, character by character, do not autocorrect. Return ONLY valid JSON no markdown: {"first_name":"","last_name":"","company":"","role":"","badge_type":""}. For badge_type extract whether the person is an Exhibitor, Visitor, or other type as printed. Use null if a field is not visible.'}
   ]}]};
   const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok)throw new Error('Gemini '+res.status);
@@ -480,17 +449,25 @@ async function callGemini(b64){
   return JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json|```/g,'').trim());
 }
 
-// ── SAVE TO EXCEL (append) ───────────────────────────────────
-function saveAppend(fn,ln,co,scanId){
+function saveAppend(scan){
   const ind=document.getElementById('saving-indicator');
   ind.classList.add('show');
   return fetch(WEBHOOK_APPEND,{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({first_name:fn,last_name:ln,company:co,score:'',scan_id:scanId,sheet:getSheet()})
+    body:JSON.stringify({
+      first_name:scan.first_name,
+      last_name:scan.last_name,
+      company:scan.company,
+      role:scan.role,
+      badge_type:scan.badge_type,
+      score:'',
+      scan_id:scan.scan_id,
+      scanned_at:scan.scanned_at,
+      sheet:scan.sheet
+    })
   }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
 }
 
-// ── UPDATE SCORE ─────────────────────────────────────────────
 function saveScore(scanId,score,sheet){
   const ind=document.getElementById('saving-indicator');
   ind.classList.add('show');
@@ -500,7 +477,6 @@ function saveScore(scanId,score,sheet){
   }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
 }
 
-// ── SCAN FLOW ────────────────────────────────────────────────
 let currentScan=null;
 
 async function triggerScan(){
@@ -515,9 +491,12 @@ async function triggerScan(){
       first_name:parsed.first_name,
       last_name:parsed.last_name,
       company:parsed.company,
+      role:parsed.role,
+      badge_type:parsed.badge_type,
       score:null,
       sheet:getSheet(),
       label:getLabel(),
+      scanned_at:new Date().toISOString(),
       ts:Date.now()
     };
     showReview();
@@ -526,22 +505,24 @@ async function triggerScan(){
 
 scanBtn.addEventListener('click',()=>{if(!isScanning&&!scanBtn.disabled)triggerScan();});
 
-// ── REVIEW ───────────────────────────────────────────────────
 function showReview(){
   document.getElementById('review-name').value=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
   document.getElementById('review-company').value=currentScan.company||'';
+  document.getElementById('review-role').value=currentScan.role||'';
+  document.getElementById('review-badge-type').value=currentScan.badge_type||'';
   document.getElementById('review-day-badge').textContent=currentScan.label;
   showOverlay('review-overlay');
 }
 
 document.getElementById('btn-confirm').addEventListener('click',()=>{
   const full=document.getElementById('review-name').value.trim();
-  const co=document.getElementById('review-company').value.trim();
   const parts=full.split(' ');
   currentScan.first_name=parts[0]||null;
   currentScan.last_name=parts.slice(1).join(' ')||null;
-  currentScan.company=co||null;
-  saveAppend(currentScan.first_name,currentScan.last_name,currentScan.company,currentScan.scan_id);
+  currentScan.company=document.getElementById('review-company').value.trim()||null;
+  currentScan.role=document.getElementById('review-role').value.trim()||null;
+  currentScan.badge_type=document.getElementById('review-badge-type').value.trim()||null;
+  saveAppend(currentScan);
   addToHistory({...currentScan,score:null});
   incrementCounter();
   showScoreInput();
@@ -549,7 +530,6 @@ document.getElementById('btn-confirm').addEventListener('click',()=>{
 
 document.getElementById('btn-discard').addEventListener('click',resetToScanner);
 
-// ── SCORE INPUT ───────────────────────────────────────────────
 function showScoreInput(){
   const full=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
   document.getElementById('score-name').textContent=full||'—';
@@ -568,38 +548,31 @@ document.getElementById('btn-save-score').addEventListener('click',()=>{
   showSaved();
 });
 
-document.getElementById('btn-skip-score').addEventListener('click',()=>{
-  currentScan.score=null;
-  showSaved();
-});
+document.getElementById('btn-skip-score').addEventListener('click',()=>{currentScan.score=null;showSaved();});
 
-// ── SAVED ────────────────────────────────────────────────────
 function showSaved(){
   const full=[currentScan.first_name,currentScan.last_name].filter(Boolean).join(' ');
   document.getElementById('saved-name').textContent=full||'—';
-  document.getElementById('saved-company').textContent=currentScan.company||'—';
+  document.getElementById('saved-company').textContent=currentScan.company||'';
+  document.getElementById('saved-role').textContent=currentScan.role||'';
+  document.getElementById('saved-badge-type').textContent=currentScan.badge_type||'';
   document.getElementById('saved-day-badge').textContent=currentScan.label;
   document.getElementById('saved-score-display').textContent=currentScan.score!=null?'Score: '+currentScan.score:'Score: not entered';
   showOverlay('saved-overlay');
 }
 
 document.getElementById('btn-next').addEventListener('click',resetToScanner);
-
-// ── ERROR ────────────────────────────────────────────────────
-function showError(msg){
-  document.getElementById('error-message').textContent=msg;
-  showOverlay('error-overlay');
-}
-
 document.getElementById('btn-retry').addEventListener('click',resetToScanner);
 
-// ── OVERLAY HELPERS ───────────────────────────────────────────
 const overlayIds=['review-overlay','score-overlay','saved-overlay','error-overlay'];
 
 function showOverlay(id){
-  overlayIds.forEach(oid=>{
-    document.getElementById(oid).classList.toggle('show',oid===id);
-  });
+  overlayIds.forEach(oid=>document.getElementById(oid).classList.toggle('show',oid===id));
+}
+
+function showError(msg){
+  document.getElementById('error-message').textContent=msg;
+  showOverlay('error-overlay');
 }
 
 function resetToScanner(){
@@ -608,7 +581,6 @@ function resetToScanner(){
   isScanning=false;prevImageData=null;currentScan=null;
 }
 
-// ── HISTORY SCREEN ───────────────────────────────────────────
 let historyEditEntry=null;
 
 document.getElementById('history-btn').addEventListener('click',()=>{
@@ -627,11 +599,12 @@ function renderHistory(){
   if(arr.length===0){list.innerHTML='<div class="history-empty">No scans yet today.</div>';return;}
   list.innerHTML=arr.map(e=>{
     const name=[e.first_name,e.last_name].filter(Boolean).join(' ')||'—';
+    const sub=[e.company,e.role,e.badge_type].filter(Boolean).join(' · ')||'—';
     const scoreHtml=e.score!=null
       ?'<div class="history-score">'+e.score+'</div>'
       :'<div class="history-score empty">Tap to add</div>';
     return '<div class="history-item" data-id="'+e.scan_id+'">'
-      +'<div class="history-item-left"><div class="history-item-name">'+name+'</div><div class="history-item-company">'+(e.company||'—')+'</div></div>'
+      +'<div class="history-item-left"><div class="history-item-name">'+name+'</div><div class="history-item-sub">'+sub+'</div></div>'
       +'<div class="history-item-right">'+scoreHtml+'<div class="history-day">'+e.label+'</div></div>'
       +'</div>';
   }).join('');
@@ -665,7 +638,6 @@ document.getElementById('btn-hcancel').addEventListener('click',()=>{
   document.getElementById('history-score-overlay').classList.remove('show');
 });
 
-// ── INIT ─────────────────────────────────────────────────────
 if(getKey()){startApp();}else{document.getElementById('config').style.display='flex';}
 </script>
 </body>
