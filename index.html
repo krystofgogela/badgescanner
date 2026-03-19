@@ -490,6 +490,7 @@ function saveAppend(scan){
       score:'',
       scan_id:scan.scan_id,
       scanned_at:scan.scanned_at,
+      scanned_by:scan.scanned_by||getUser(),
       sheet:scan.sheet
     })
   }).finally(()=>setTimeout(()=>ind.classList.remove('show'),1500));
