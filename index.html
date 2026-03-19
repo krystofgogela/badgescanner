@@ -323,9 +323,17 @@ document.getElementById('ios-dismiss').addEventListener('click',()=>{
 });
 
 document.getElementById('config-save').addEventListener('click',()=>{
+  const name=document.getElementById('config-name').value.trim();
   const key=document.getElementById('gemini-key').value.trim();
+  const wa=document.getElementById('config-webhook-append').value.trim();
+  const ws=document.getElementById('config-webhook-score').value.trim();
+  const wp=document.getElementById('config-webhook-photo').value.trim();
   if(!key){alert('API key required.');return;}
+  if(name)LS.set('user_name',name);
   LS.set('gemini_key',key);
+  if(wa)LS.set('webhook_append',wa);
+  if(ws)LS.set('webhook_score',ws);
+  if(wp)LS.set('webhook_photo',wp);
   startApp();
 });
 
